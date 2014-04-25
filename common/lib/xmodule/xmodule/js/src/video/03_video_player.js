@@ -15,6 +15,7 @@ function (HTML5Video, Resizer) {
             return dfd.promise();
         },
         methodsDict = {
+            destroy: destroy,
             duration: duration,
             handlePlaybackQualityChange: handlePlaybackQualityChange,
 
@@ -920,6 +921,13 @@ function (HTML5Video, Resizer) {
     function onVolumeChange(volume) {
         this.videoPlayer.player.setVolume(volume);
         this.el.trigger('volumechange', arguments);
+    }
+
+    function destroy() {
+        this.videoPlayer.stopTimer();
+        if (this.isYoutubeType()){
+            this.videoPlayer.player.destroy();
+        }
     }
 });
 
