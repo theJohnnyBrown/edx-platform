@@ -155,15 +155,14 @@ def dev(options):
         args = ['lms', '--settings={}'.format('cms.dev'), '--skip-collect']
         call_task('pavelib.assets.update_assets', args=args)
 
-        args = ['studio', '--settings={}'.format('dev'), '--skip-collect']
+        args = ['studio', '--settings={}'.format(settings_cms), '--skip-collect']
         call_task('pavelib.assets.update_assets', args=args)
 
         call_task('pavelib.assets.watch_assets', options={'background': True})
-
     run_multi_processes([
-        django_cmd('lms', 'cms.dev', 'runserver', '--traceback', '--pythonpath=.', "0.0.0.0:{}".format(DEFAULT_PORT['lms'])),
-        django_cmd('studio', 'dev', 'runserver', '--traceback', '--pythonpath=.', "0.0.0.0:{}".format(DEFAULT_PORT['studio'])),
-        django_cmd('lms', 'celery', 'celery', 'worker', '--loglevel=INFO', '--pythonpath=.')
+        django_cmd('lms', settings_lms, 'runserver', '--traceback', '--pythonpath=.', "0.0.0.0:{}".format(DEFAULT_PORT['lms'])),
+        django_cmd('studio', settings_cms, 'runserver', '--traceback', '--pythonpath=.', "0.0.0.0:{}".format(DEFAULT_PORT['studio'])),
+        django_cmd('lms', worker_settings, 'celery', 'worker', '--loglevel=INFO', '--pythonpath=.')
     ])
 
 
