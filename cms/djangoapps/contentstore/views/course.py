@@ -62,7 +62,12 @@ __all__ = ['course_info_handler', 'course_handler', 'course_info_update_handler'
            'settings_handler',
            'grading_handler',
            'advanced_settings_handler',
-           'textbooks_list_handler', 'textbooks_detail_handler']
+           'textbooks_list_handler', 'textbooks_detail_handler', 'return_error']
+
+
+def return_error(request):
+    1/0
+    return
 
 
 def _get_locator_and_course(package_id, branch, version_guid, block_id, user, depth=0):

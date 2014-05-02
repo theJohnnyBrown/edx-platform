@@ -8,6 +8,9 @@ admin.autodiscover()
 
 urlpatterns = patterns('',  # nopep8
 
+    # artificially induce 500 error
+    url(r'^500-error$', 'contentstore.views.return_error', name='return_error'),
+
     url(r'^transcripts/upload$', 'contentstore.views.upload_transcripts', name='upload_transcripts'),
     url(r'^transcripts/download$', 'contentstore.views.download_transcripts', name='download_transcripts'),
     url(r'^transcripts/check$', 'contentstore.views.check_transcripts', name='check_transcripts'),
