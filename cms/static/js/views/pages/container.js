@@ -1,11 +1,14 @@
 /**
- * XBlockContainerView is used to display an xblock which has children, and allows the
- * user to interact with the children.
+ * XBlockContainerPage is used to display Studio's container page for an xblock which has children.
+ * This page allows the user to understand and manipulate the xblock and its children.
  */
-define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js/views/feedback_prompt", "js/views/baseview", "js/views/container", "js/views/xblock", "js/views/modals/edit_xblock", "js/models/xblock_info"],
-    function ($, _, gettext, NotificationView, PromptView, BaseView, ContainerView, XBlockView, EditXBlockModal, XBlockInfo) {
+define(["jquery", "underscore", "gettext", "js/views/feedback_notification",
+    "js/views/baseview", "js/views/container", "js/views/xblock", "js/views/components/add_xblock",
+    "js/views/modals/edit_xblock", "js/models/xblock_info"],
+    function ($, _, gettext, NotificationView, BaseView, ContainerView, XBlockView, AddXBlockComponent,
+              EditXBlockModal, XBlockInfo) {
 
-        var XBlockContainerView = BaseView.extend({
+        var XBlockContainerPage = BaseView.extend({
             // takes XBlockInfo as a model
 
             view: 'container_preview',
@@ -39,7 +42,8 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
                     success: function(xblock) {
                         if (xblockView.hasChildXBlocks()) {
                             xblockView.$el.removeClass('is-hidden');
-                            self.addButtonActions(xblockView.$el);
+                            self.renderAddXBlockComponents();
+                            self.onXBlockRefresh(xblockView);
                         } else {
                             noContentElement.removeClass('is-hidden');
                         }
@@ -50,11 +54,28 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
             },
 
             findXBlockElement: function(target) {
-                return $(target).closest('[data-locator]');
+                return $(target).closest('.studio-xblock-wrapper');
             },
 
             getURLRoot: function() {
                 return this.xblockView.model.urlRoot;
+            },
+
+            onXBlockRefresh: function(xblockView) {
+                this.addButtonActions(xblockView.$el);
+                this.xblockView.refresh();
+            },
+
+            renderAddXBlockComponents: function() {
+                var self = this;
+                this.$('.add-xblock-component').each(function(index, element) {
+                    var component = new AddXBlockComponent({
+                        el: element,
+                        createComponent: _.bind(self.createComponent, self),
+                        collection: self.options.templates
+                    });
+                    component.render();
+                });
             },
 
             addButtonActions: function(element) {
@@ -86,101 +107,96 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
                 });
             },
 
+            createComponent: function(template, target) {
+                var parentElement = this.findXBlockElement(target),
+                    parentLocator = parentElement.data('locator'),
+                    buttonPanel = parentElement.find('.add-xblock-component'),
+                    listPanel = buttonPanel.prev(),
+                    newElement = $('<li></li>').appendTo(listPanel);
+                return this.createAndRenderXBlock(newElement,
+                    _.extend(template,
+                        {
+                            parent_locator: parentLocator
+                        }),
+                    this.getScrollOffset(buttonPanel));
+            },
+
             duplicateComponent: function(xblockElement) {
                 var self = this,
-                    parentElement = self.findXBlockElement(xblockElement.parent()),
-                    duplicating = new NotificationView.Mini({
-                        title: gettext('Duplicating&hellip;')
+                    parentElement = self.findXBlockElement(xblockElement.parent());
+                this.runOperationShowingMessage(gettext('Duplicating&hellip;'),
+                    function() {
+                        var newElement = $('<li></li>').insertAfter(xblockElement);
+                        return self.createAndRenderXBlock(newElement,
+                            {
+                                duplicate_source_locator: xblockElement.data('locator'),
+                                parent_locator: parentElement.data('locator')
+                            },
+                            self.getScrollOffset(xblockElement));
                     });
-
-                duplicating.show();
-                return $.postJSON(self.getURLRoot(), {
-                    duplicate_source_locator: xblockElement.data('locator'),
-                    parent_locator: parentElement.data('locator')
-                }, function(data) {
-                    // copy the element
-                    var duplicatedElement = xblockElement.clone(false);
-
-                    // place it after the original element
-                    xblockElement.after(duplicatedElement);
-
-                    // update its locator id
-                    duplicatedElement.attr('data-locator', data.locator);
-
-                    // have it refresh itself
-                    self.refreshXBlockElement(duplicatedElement);
-
-                    // hide the notification
-                    duplicating.hide();
-                });
             },
 
+            /**
+             * Creates a new child xblock instance based upon the supplied xblock info.
+             * It then replaces the specified element with the rendering of the new xblock.
+             * @param xblockElement The element into which to render the xblock.
+             * @param requestData The data to be supplied to the xblock.
+             * @param scrollOffset: The scroll offset for the new element.
+             */
+            createAndRenderXBlock: function(xblockElement, requestData, scrollOffset) {
+                var self = this;
+                return $.postJSON(this.getURLRoot(), requestData,
+                    function(data) {
+                        var locator = data.locator,
+                            xblockInfo = new XBlockInfo({
+                                id: locator
+                            });
+                        self.setScrollOffset(xblockElement, scrollOffset);
+                        self.refreshXBlock(xblockInfo, xblockElement);
+                    });
+            },
 
             deleteComponent: function(xblockElement) {
-                var self = this, deleting;
-                return new PromptView.Warning({
-                    title: gettext('Delete this component?'),
-                    message: gettext('Deleting this component is permanent and cannot be undone.'),
-                    actions: {
-                        primary: {
-                            text: gettext('Yes, delete this component'),
-                            click: function(prompt) {
-                                prompt.hide();
-                                deleting = new NotificationView.Mini({
-                                    title: gettext('Deleting&hellip;')
-                                });
-                                deleting.show();
+                var self = this;
+                this.confirmThenRunOperation(gettext('Delete this component?'),
+                    gettext('Deleting this component is permanent and cannot be undone.'),
+                    gettext('Yes, delete this component'),
+                    function() {
+                        self.runOperationShowingMessage(gettext('Deleting&hellip;'),
+                            function() {
                                 return $.ajax({
                                     type: 'DELETE',
-                                    url:
-                                        self.getURLRoot() + "/" +
-                                            xblockElement.data('locator') + "?" +
-                                            $.param({recurse: true, all_versions: true})
+                                    url: self.getURLRoot() + "/" +
+                                        xblockElement.data('locator') + "?" +
+                                        $.param({recurse: true, all_versions: true})
                                 }).success(function() {
-                                    deleting.hide();
                                     xblockElement.remove();
                                 });
-                            }
-                        },
-                        secondary: {
-                            text: gettext('Cancel'),
-                            click: function(prompt) {
-                                return prompt.hide();
-                            }
-                        }
-                    }
-                }).show();
-            },
-
-            refreshXBlockElement: function(xblockElement) {
-                this.refreshXBlock(
-                    new XBlockInfo({
-                        id: xblockElement.data('locator')
-                    }),
-                    xblockElement
-                );
+                            });
+                    });
             },
 
             refreshXBlock: function(xblockInfo, xblockElement) {
-                var self = this, temporaryView;
+                var self = this,
+                    temporaryView;
 
                 // There is only one Backbone view created on the container page, which is
                 // for the container xblock itself. Any child xblocks rendered inside the
-                // container do not get a Backbone view. Thus, create a temporary XBlock
-                // around the child element so that it can be refreshed.
+                // container do not get a Backbone view. Thus, create a temporary view
+                // to render the content, and then replace the child element with the result.
                 temporaryView = new XBlockView({
-                    el: xblockElement,
                     model: xblockInfo,
-                    view: this.view
+                    view: 'container_child_preview'
                 });
                 temporaryView.render({
                     success: function() {
+                        self.onXBlockRefresh(temporaryView);
+                        xblockElement.replaceWith(temporaryView.$el.find('.studio-xblock-wrapper'));
                         temporaryView.unbind();  // Remove the temporary view
-                        self.addButtonActions(xblockElement);
                     }
                 });
             }
         });
 
-        return XBlockContainerView;
+        return XBlockContainerPage;
     }); // end define();

@@ -194,7 +194,8 @@ def xblock_view_handler(request, package_id, view_name, tag=None, branch=None, v
     if 'application/json' in accept_header:
         store = get_modulestore(old_location)
         component = store.get_item(old_location)
-        is_read_only = _xblock_is_read_only(component)
+        root_xblock = component
+        is_read_only = _is_xblock_read_only(component)
 
         # wrap the generated fragment in the xmodule_editor div so that the javascript
         # can bind to it correctly
@@ -218,21 +219,21 @@ def xblock_view_handler(request, package_id, view_name, tag=None, branch=None, v
                 'runtime_type': 'studio',
                 'container_view': False,
                 'read_only': is_read_only,
-                'root_xblock': component,
+                'root_xblock': root_xblock,
             }
             # For non-leaf xblocks on the unit page, show the special rendering
             # which links to the new container page.
             html = render_to_string('container_xblock_component.html', {
                 'xblock_context': context,
-                'xblock': component,
+                'xblock': root_xblock,
                 'locator': locator,
             })
             return JsonResponse({
                 'html': html,
                 'resources': [],
             })
-        elif view_name in ('student_view', 'container_preview'):
-            is_container_view = (view_name == 'container_preview')
+        elif view_name in ('student_view', 'container_preview', 'container_child_preview'):
+            is_container_view = (view_name in ['container_preview', 'container_child_preview'])
 
             # Only show the new style HTML for the container view, i.e. for non-verticals
             # Note: this special case logic can be removed once the unit page is replaced
@@ -241,7 +242,7 @@ def xblock_view_handler(request, package_id, view_name, tag=None, branch=None, v
                 'runtime_type': 'studio',
                 'container_view': is_container_view,
                 'read_only': is_read_only,
-                'root_xblock': component,
+                'root_xblock': root_xblock if (view_name == 'container_preview') else None,
             }
 
             fragment = get_preview_fragment(request, component, context)
@@ -270,7 +271,7 @@ def xblock_view_handler(request, package_id, view_name, tag=None, branch=None, v
         return HttpResponse(status=406)
 
 
-def _xblock_is_read_only(xblock):
+def _is_xblock_read_only(xblock):
     """
     Returns true if the specified xblock is read-only, meaning that it cannot be edited.
     """
@@ -411,7 +412,7 @@ def _create_item(request):
     metadata = {}
     data = None
     template_id = request.json.get('boilerplate')
-    if template_id is not None:
+    if template_id is not None and len(template_id) > 0:
         clz = parent.runtime.load_block_type(category)
         if clz is not None:
             template = clz.get_template(template_id)

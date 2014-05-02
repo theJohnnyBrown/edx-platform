@@ -35,7 +35,7 @@ class ContainerViewTestCase(CourseTestCase):
             self.child_vertical,
             branch_name=branch_name,
             expected_section_tag=(
-                '<section class="wrapper-xblock level-page is-hidden" '
+                '<section class="wrapper-xblock level-page is-hidden studio-xblock-wrapper" '
                 'data-locator="{branch_name}/Child_Vertical">'.format(branch_name=branch_name)
             ),
             expected_breadcrumbs=(
@@ -63,7 +63,7 @@ class ContainerViewTestCase(CourseTestCase):
             published_xblock_with_child,
             branch_name=branch_name,
             expected_section_tag=(
-                '<section class="wrapper-xblock level-page is-hidden" '
+                '<section class="wrapper-xblock level-page is-hidden studio-xblock-wrapper" '
                 'data-locator="{branch_name}/Wrapper">'.format(branch_name=branch_name)
             ),
             expected_breadcrumbs=(
@@ -83,7 +83,7 @@ class ContainerViewTestCase(CourseTestCase):
             draft_xblock_with_child,
             branch_name=branch_name,
             expected_section_tag=(
-                '<section class="wrapper-xblock level-page is-hidden" '
+                '<section class="wrapper-xblock level-page is-hidden studio-xblock-wrapper" '
                 'data-locator="{branch_name}/Wrapper">'.format(branch_name=branch_name)
             ),
             expected_breadcrumbs=(

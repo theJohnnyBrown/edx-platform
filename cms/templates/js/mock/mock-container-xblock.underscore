@@ -4,25 +4,30 @@
     <div class="xblock" data-block-type="vertical" data-locator="locator-container">
         <div class="vert-mod">
             <ol class="vertical-container">
-                <li class="vertical-element is-draggable">
+                <li class="vertical-element is-draggable studio-xblock-wrapper" data-locator="testCourse/branch/draft/split_test/splitFFF">
                     <div class="vert vert-0">
-                        <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
                         <div class="xblock" data-block-type="vertical">
                             <div class="vert-mod">
                                 <ol class="vertical-container">
-                                    <li class="vertical-element is-draggable">
+                                    <li class="vertical-element is-draggable studio-xblock-wrapper" data-locator="locator-group-A">
                                         <div class="vert vert-0">
-                                            <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
                                             <section class="wrapper-xblock level-nesting" data-locator="locator-group-A">
-                                                <header class="xblock-header"></header>
+                                                <header class="xblock-header">
+                                                    <div class="header-actions">
+                                                        <ul class="actions-list">
+                                                            <li class="action-item action-drag">
+                                                                <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </header>
 
                                                 <article class="xblock-render">
                                                     <div class="xblock" data-block-type="vertical">
                                                         <div class="vert-mod">
                                                             <ol class="vertical-container">
-                                                                <li class="vertical-element is-draggable">
+                                                                <li class="vertical-element is-draggable studio-xblock-wrapper" data-locator="locator-component-A1">
                                                                     <div class="vert vert-0">
-                                                                        <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
                                                                         <section class="wrapper-xblock level-element"
                                                                                  data-locator="locator-component-A1">
                                                                             <header class="xblock-header">
@@ -40,6 +45,9 @@
                                                                                                 href="#"
                                                                                                 class="delete-button action-button"></a>
                                                                                         </li>
+                                                                                        <li class="action-item action-drag">
+                                                                                            <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
+                                                                                        </li>
                                                                                     </ul>
                                                                                 </div>
                                                                             </header>
@@ -48,9 +56,8 @@
                                                                     </div>
 
                                                                 </li>
-                                                                <li class="vertical-element is-draggable">
+                                                                <li class="vertical-element is-draggable studio-xblock-wrapper" data-locator="locator-component-A2">
                                                                     <div class="vert vert-1">
-                                                                        <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
                                                                         <section class="wrapper-xblock level-element"
                                                                                  data-locator="locator-component-A2">
 
@@ -69,6 +76,9 @@
                                                                                                 href="#"
                                                                                                 class="delete-button action-button"></a>
                                                                                         </li>
+                                                                                        <li class="action-item action-drag">
+                                                                                            <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
+                                                                                        </li>
                                                                                     </ul>
                                                                                 </div>
                                                                             </header>
@@ -76,9 +86,8 @@
                                                                         </section>
                                                                     </div>
                                                                 </li>
-                                                                <li class="vertical-element is-draggable">
+                                                                <li class="vertical-element is-draggable studio-xblock-wrapper" data-locator="locator-component-A3">
                                                                     <div class="vert vert-2">
-                                                                        <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
                                                                         <section class="wrapper-xblock level-element"
                                                                                  data-locator="locator-component-A3">
                                                                             <header class="xblock-header">
@@ -96,6 +105,9 @@
                                                                                                 href="#"
                                                                                                 class="delete-button action-button"></a>
                                                                                         </li>
+                                                                                        <li class="action-item action-drag">
+                                                                                            <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
+                                                                                        </li>
                                                                                     </ul>
                                                                                 </div>
                                                                             </header>
@@ -103,6 +115,7 @@
                                                                         </section>
                                                                     </div>
                                                                 </li>
+                                                                <li class="add-xblock-component new-component-item adding"></li>
                                                             </ol>
                                                         </div>
                                                     </div>
@@ -110,19 +123,25 @@
                                             </section>
                                         </div>
                                     </li>
-                                    <li class="vertical-element is-draggable">
+                                    <li class="vertical-element is-draggable studio-xblock-wrapper" data-locator="locator-group-B">
                                         <div class="vert vert-1">
-                                            <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
                                             <section class="wrapper-xblock level-nesting" data-locator="locator-group-B">
-                                                <header class="xblock-header"></header>
+                                                <header class="xblock-header">
+                                                    <div class="header-actions">
+                                                        <ul class="actions-list">
+                                                            <li class="action-item action-drag">
+                                                                <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </header>
 
                                                 <article class="xblock-render">
                                                     <div class="xblock" data-block-type="vertical">
                                                         <div class="vert-mod">
                                                             <ol class="vertical-container">
-                                                                <li class="vertical-element is-draggable">
+                                                                <li class="vertical-element is-draggable studio-xblock-wrapper" data-locator="locator-component-B1">
                                                                     <div class="vert vert-0">
-                                                                        <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
                                                                         <section class="wrapper-xblock level-element"
                                                                                  data-locator="locator-component-B1">
 
@@ -141,6 +160,9 @@
                                                                                                 href="#"
                                                                                                 class="delete-button action-button"></a>
                                                                                         </li>
+                                                                                        <li class="action-item action-drag">
+                                                                                            <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
+                                                                                        </li>
                                                                                     </ul>
                                                                                 </div>
                                                                             </header>
@@ -148,9 +170,8 @@
                                                                         </section>
                                                                     </div>
                                                                 </li>
-                                                                <li class="vertical-element is-draggable">
+                                                                <li class="vertical-element is-draggable studio-xblock-wrapper" data-locator="locator-component-B2">
                                                                     <div class="vert vert-1">
-                                                                        <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
                                                                         <section class="wrapper-xblock level-element"
                                                                                  data-locator="locator-component-B2">
 
@@ -169,6 +190,9 @@
                                                                                                 href="#"
                                                                                                 class="delete-button action-button"></a>
                                                                                         </li>
+                                                                                        <li class="action-item action-drag">
+                                                                                            <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
+                                                                                        </li>
                                                                                     </ul>
                                                                                 </div>
                                                                             </header>
@@ -176,9 +200,8 @@
                                                                         </section>
                                                                     </div>
                                                                 </li>
-                                                                <li class="vertical-element is-draggable">
+                                                                <li class="vertical-element is-draggable studio-xblock-wrapper" data-locator="locator-component-B3">
                                                                     <div class="vert vert-2">
-                                                                        <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
                                                                         <section class="wrapper-xblock level-element"
                                                                                  data-locator="locator-component-B3">
 
@@ -197,6 +220,9 @@
                                                                                                 href="#"
                                                                                                 class="delete-button action-button"></a>
                                                                                         </li>
+                                                                                        <li class="action-item action-drag">
+                                                                                            <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
+                                                                                        </li>
                                                                                     </ul>
                                                                                 </div>
                                                                             </header>
@@ -204,6 +230,7 @@
                                                                         </section>
                                                                     </div>
                                                                 </li>
+                                                                <li class="add-xblock-component new-component-item adding"></li>
                                                             </ol>
                                                         </div>
                                                     </div>

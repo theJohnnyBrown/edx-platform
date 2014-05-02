@@ -18,7 +18,7 @@ define(["jquery", "underscore", "js/views/xblock", "js/utils/module", "gettext",
                     stop: function (event, ui) {
                         var saving, hideSaving, removeFromParent;
 
-                        if (oldParent === undefined) {
+                        if (_.isUndefined(oldParent)) {
                             // If no actual change occurred,
                             // oldParent will never have been set.
                             return;
@@ -55,7 +55,7 @@ define(["jquery", "underscore", "js/views/xblock", "js/utils/module", "gettext",
                         // be null if the change is related to the list the element
                         // was originally in (the case of a move within the same container
                         // or the deletion from a container when moving to a new container).
-                        var parent = $(event.target).closest('.wrapper-xblock');
+                        var parent = $(event.target).closest('.studio-xblock-wrapper');
                         if (ui.sender) {
                             // Move to a new container (the addition part).
                             newParent = parent;
@@ -79,10 +79,10 @@ define(["jquery", "underscore", "js/views/xblock", "js/utils/module", "gettext",
             reorder: function (targetParent, successCallback) {
                 var children, childLocators;
 
-                // Find descendants with class "wrapper-xblock" whose parent == targetParent.
+                // Find descendants with class "studio-xblock-wrapper" whose parent == targetParent.
                 // This is necessary to filter our grandchildren, great-grandchildren, etc.
-                children = targetParent.find('.wrapper-xblock').filter(function () {
-                    var parent = $(this).parent().closest('.wrapper-xblock');
+                children = targetParent.find('.studio-xblock-wrapper').filter(function () {
+                    var parent = $(this).parent().closest('.studio-xblock-wrapper');
                     return parent.data('locator') === targetParent.data('locator');
                 });
 
@@ -107,7 +107,10 @@ define(["jquery", "underscore", "js/views/xblock", "js/utils/module", "gettext",
                         }
                     }
                 });
+            },
 
+            refresh: function() {
+                this.$('.vertical-container').sortable('refresh');
             }
         });
 

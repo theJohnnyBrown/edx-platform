@@ -28,7 +28,7 @@ from util.sandboxing import can_execute_unsafe_code
 
 import static_replace
 from .session_kv_store import SessionKeyValueStore
-from .helpers import render_from_lms
+from .helpers import render_from_lms, get_parent_xblock
 from ..utils import get_course_for_item
 
 from contentstore.views.access import get_user_role
@@ -166,6 +166,15 @@ def _load_preview_module(request, descriptor):
     return descriptor
 
 
+def _is_xblock_parent_reorderable(xblock):
+    """
+    Returns true if the specified xblock has a direct parent that supports reordering.
+    """
+    parent = get_parent_xblock(xblock)
+    # For now, only verticals support reordering
+    return parent and parent.category == 'vertical'
+
+
 # pylint: disable=unused-argument
 def _studio_wrap_xblock(xblock, view, frag, context, display_name_only=False):
     """
@@ -173,16 +182,21 @@ def _studio_wrap_xblock(xblock, view, frag, context, display_name_only=False):
     """
     # Only add the Studio wrapper when on the container page. The unit page will remain as is for now.
     if context.get('container_view', None) and view == 'student_view':
+        root_xblock = context.get('root_xblock')
+        is_root = root_xblock and xblock.location == root_xblock.location
         locator = loc_mapper().translate_location(xblock.course_id, xblock.location, published=False)
+        is_parent_reorderable = not context['read_only'] and _is_xblock_parent_reorderable(xblock)
         template_context = {
             'xblock_context': context,
             'xblock': xblock,
             'locator': locator,
             'content': frag.content,
+            'is_root': is_root,
+            'is_parent_reorderable': is_parent_reorderable,
         }
         if xblock.category == 'vertical':
             template = 'studio_vertical_wrapper.html'
-        elif xblock.location != context.get('root_xblock').location and xblock.has_children:
+        elif not is_root and xblock.has_children:
             template = 'container_xblock_component.html'
         else:
             template = 'studio_xblock_wrapper.html'

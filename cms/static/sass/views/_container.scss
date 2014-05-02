@@ -120,7 +120,7 @@ body.view-container .content-primary {
 
     // min-height to allow drop when empty
     .vertical-container {
-      min-height: ($baseline*2.5);
+      min-height: $baseline;
     }
 
     .vert {
@@ -128,20 +128,17 @@ body.view-container .content-primary {
 
       .drag-handle {
         display: none; // only show when vert is draggable
-        position: absolute;
-        top: 0;
-        right: ($baseline/2); // equal to margin on component
-        width: ($baseline*1.5);
-        height: ($baseline*2.5);
+        width: $baseline;
+        height: ($baseline*1.5);
         margin: 0;
-        background: transparent url("../img/drag-handles.png") no-repeat scroll center center;
+        background: transparent url("../img/drag-handles.png") no-repeat scroll right center;
       }
     }
 
     .is-draggable {
 
       .xblock-header {
-        padding-right: ($baseline*1.5); // make room for drag handle
+        padding-right: ($baseline/4);
       }
 
       .drag-handle {
@@ -165,14 +162,8 @@ body.view-container .content-primary {
     // CASE: nesting level xblock rendering
     &.level-nesting {
       @include transition(all $tmg-f2 linear 0s);
-      border: none;
+      border: 1px solid $gray-l3;
       padding-bottom: $baseline;
-      box-shadow: none;
-
-      &:hover {
-        background-color: $gray-l6;
-        box-shadow: 0 0 1px $shadow-d2 inset;
-      }
 
       .xblock-header {
         @include ui-flexbox();
@@ -228,6 +219,24 @@ body.view-container .content-primary {
           display: none;
         }
       }
+    }
+  }
+
+  // add a new component menu override - most styles currently live in _unit.scss
+  .new-component-item {
+    margin: $baseline ($baseline/2);
+    border: 1px solid $gray-l3;
+    border-radius: ($baseline/4);
+    box-shadow: 0 1px 3px $shadow inset;
+    background-color: $gray-l5;
+    padding: ($baseline/2);
+
+    h5 {
+      margin-bottom: ($baseline*.75);
+    }
+
+    .new-component-type a {
+      margin-bottom: ($baseline/2);
     }
   }
 }
