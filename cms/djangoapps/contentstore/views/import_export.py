@@ -238,6 +238,7 @@ def import_handler(request, tag=None, package_id=None, branch=None, version_guid
 
                 # Send errors to client with stage at which error occurred.
                 except Exception as exception:   # pylint: disable=W0703
+                    log.exception("Course import failed.")
                     return JsonResponse(
                         {
                             'ErrMsg': str(exception),
