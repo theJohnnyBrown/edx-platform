@@ -13,4 +13,4 @@ Installing and Configuring the edX Platform
 
    read_me
    change_log
-   
+   installation/install_devstack
