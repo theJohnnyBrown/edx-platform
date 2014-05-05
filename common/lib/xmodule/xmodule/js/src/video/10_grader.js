@@ -12,28 +12,15 @@ function(GraderCollection) {
      * player.
      * @return {jquery Promise}
      */
-    var Grader = function () { };
-
-    Grader.extend = function (protoProps) {
-        var Parent = this,
-            Child = function () {
-                if ($.isFunction(this['initialize'])) {
-                    return this['initialize'].apply(this, arguments);
-                }
-            };
-
-        // inherit
-        var F = function () {};
-        F.prototype = Parent.prototype;
-        Child.prototype = new F();
-        Child.constructor = Parent;
-        Child.__super__ = Parent.prototype;
-
-        if (protoProps) {
-            $.extend(Child.prototype, protoProps);
+    var Grader = function (state, i18n) {
+        if (!(this instanceof Grader)) {
+            return new Grader(state, i18n);
         }
 
-        return Child;
+        this.state = state;
+        this.initialize(state, i18n);
+
+        return $.Deferred().resolve().promise();
     };
 
     Grader.prototype = {
@@ -58,8 +45,6 @@ function(GraderCollection) {
                     .done(this.onSuccess.bind(this))
                     .fail(this.onError.bind(this));
             }
-
-            return $.Deferred().resolve().promise();
         },
 
         /**
@@ -71,7 +56,7 @@ function(GraderCollection) {
          *   return dfd.promise();
          */
         getGraders: function (element, state) {
-            return GraderCollection.apply(this, arguments);
+            return new GraderCollection(element, state);
         },
 
         /**
@@ -188,6 +173,29 @@ function(GraderCollection) {
             this.el.addClass('is-error');
         }
     };
+
+    Grader.extend = function (protoProps) {
+        var Parent = this,
+            Child = function () {
+                if ($.isFunction(this['initialize'])) {
+                    return this['initialize'].apply(this, arguments);
+                }
+            };
+
+        // inherit
+        var F = function () {};
+        F.prototype = Parent.prototype;
+        Child.prototype = new F();
+        Child.constructor = Parent;
+        Child.__super__ = Parent.prototype;
+
+        if (protoProps) {
+            $.extend(Child.prototype, protoProps);
+        }
+
+        return Child;
+    };
+
 
     return Grader;
 });

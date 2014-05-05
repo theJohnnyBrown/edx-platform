@@ -17,8 +17,8 @@ function() {
     AbstractGrader.extend = function (protoProps) {
         var Parent = this,
             Child = function () {
-                if ($.isFunction(this['initialize'])) {
-                    return this['initialize'].apply(this, arguments);
+                if ($.isFunction(this.initialize)) {
+                    return this.initialize.apply(this, arguments);
                 }
             };
 
@@ -37,12 +37,16 @@ function() {
     };
 
     AbstractGrader.prototype = {
+        /** Grader name on backend */
+        name: '',
+
         /** Initializes the module. */
-        initialize: function (state, i18n) {
+        initialize: function (element, state, config) {
+            this.el = element;
             this.state = state;
-            this.el = this.state.el;
+            this.config = config;
             this.url = this.state.config.gradeUrl;
-            this.grader = this.getGrader(this.el, this.state);
+            this.grader = this.getGrader(this.el, this.state, this.config);
 
             return this.sendGradeOnSuccess(this.grader);
         },
@@ -55,7 +59,7 @@ function() {
          *   this.el.on('play', dfd.resolve);
          *   return dfd.promise();
          */
-        getGrader: function (element, state) {
+        getGrader: function (element, state, config) {
             throw new Error('Please implement logic of the `getGrader` method.');
         },
 
@@ -63,26 +67,23 @@ function() {
          * Sends results of grading to the server.
          * @return {jquery Promise}
          */
-        sendGrade: function (grader) {
+        sendGrade: function () {
             return $.ajaxWithPrefix({
                 url: this.url,
+                data: {
+                    'grader_name': this.name
+                },
                 type: 'POST',
                 notifyOnError: false
             });
         },
 
         /**
-         * Decorates provided grader to send grade results on success.
+         * Decorates provided grader to send grade results on succeeded scoring.
          * @param {jquery Promise} grader Grader function.
          */
         sendGradeOnSuccess: function (grader) {
-            var grade = grader.pipe(function () {
-                    return this.sendGrade();
-                });
-
-            return grade
-                .done(dfd.resolve)
-                .fail(dfd.reject);
+            return grader.pipe(this.sendGrade.bind(this));
         }
     };
 
