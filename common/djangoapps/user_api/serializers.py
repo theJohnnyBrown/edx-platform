@@ -2,7 +2,18 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from student.models import UserProfile
 from user_api.models import UserPreference
+from django_comment_common.models import Role
 
+class RoleSerializer(serializers.ModelSerializer):
+    users = serializers.SerializerMethodField('get_users')
+
+    def get_users(self, role):
+        users = role.users.all()
+        return [user.email for user in users]
+
+    class Meta:
+        model = Role
+        fields = ('name', 'course_id', 'users')
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     name = serializers.SerializerMethodField("get_name")
