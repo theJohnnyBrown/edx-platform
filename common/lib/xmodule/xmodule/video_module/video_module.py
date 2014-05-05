@@ -86,7 +86,8 @@ class VideoModule(VideoFields, VideoScoring, VideoStudentViewHandlers, XModule):
             resource_string(module, 'js/src/video/07_video_volume_control.js'),
             resource_string(module, 'js/src/video/08_video_speed_control.js'),
             resource_string(module, 'js/src/video/09_video_caption.js'),
-            resource_string(module, 'js/src/video/10_graders.js'),
+            resource_string(module, 'js/src/video/10_grader_collection.js'),
+            resource_string(module, 'js/src/video/10_grader.js'),
             resource_string(module, 'js/src/video/11_main.js'),
         ]
     }
