@@ -411,8 +411,13 @@ function (VideoPlayer, VideoStorage, i18n) {
                         return value;
                     },
                     'endTime': function (value) {
+                        value = parseInt(value, 10);
 
-                        return storage.getItem('score', true) || value;
+                        if (!isFinite(value) || value === 0) {
+                            return null;
+                        }
+
+                        return value;
                      },
                     'score': function (value) {
 
