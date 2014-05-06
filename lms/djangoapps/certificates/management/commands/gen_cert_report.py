@@ -61,11 +61,23 @@ class Command(BaseCommand):
             # find students who are active
             # enrolled students are always downloable + notpassing
             print "Looking up certificate states for {0}".format(course_id)
-            active_students = User.objects.filter(
+            enrolled_students = User.objects.filter(
                 courseenrollment__course_id=course_id,
                 courseenrollment__is_active=True)
+            total_students = User.objects.filter(
+                courseenrollment__course_id=course_id)
+            verified_total = GeneratedCertificate.objects.filter(
+                course_id__exact=course_id, mode__exact='verified')
+            honor_total = GeneratedCertificate.objects.filter(
+                course_id__exact=course_id, mode__exact='honor')
+            audit_total = GeneratedCertificate.objects.filter(
+                course_id__exact=course_id, mode__exact='audit')
 
-            cert_data[course_id] = {'active': active_students.count()}
+            cert_data[course_id] = {'current_enrolled': enrolled_students.count(),
+                                    'total_enrolled': total_students.count()
+                                    'verified_total': verified_total.count(),
+                                    'honor_total': honor_total.count(),
+                                    'audit_total': audit_total.count()}
 
             status_tally = GeneratedCertificate.objects.filter(
                 course_id__exact=course_id).values('status').annotate(
@@ -83,21 +95,21 @@ class Command(BaseCommand):
                     for mode in mode_tally})
 
         # all states we have seen far all courses
-        status_headings = set(
+        status_headings = sorted(set(
             [status for course in cert_data
-                for status in cert_data[course]])
+                for status in cert_data[course]]))
 
         # print the heading for the report
-        print "{:>20}".format("course ID"),
-        print ' '.join(["{:>12}".format(heading)
+        print "{:>26}".format("course ID"),
+        print ' '.join(["{:>16}".format(heading)
                         for heading in status_headings])
 
         # print the report
         for course_id in cert_data:
-            print "{0:>20}".format(course_id[0:18]),
+            print "{0:>26}".format(course_id[0:24]),
             for heading in status_headings:
                 if heading in cert_data[course_id]:
-                    print "{:>12}".format(cert_data[course_id][heading]),
+                    print "{:>16}".format(cert_data[course_id][heading]),
                 else:
-                    print " " * 12,
+                    print " " * 16,
             print
