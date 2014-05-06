@@ -423,16 +423,15 @@ Reorganize Your Course
 **********************
 
 You can reorganize your course by dragging and dropping sections, subsections,
-units, and components. You can move elements on the **Course Outline** page or
-on an individual unit page.
+units, components, and components within components. You can move elements on
+the **Course Outline** page or on an individual unit page.
 
 To move an element, hover over the element handle on the right side of the
 screen until the mouse pointer changes to a four-headed arrow. Then, click and
 drag the element to the location that you want.
 
 .. image:: ../Images/DragAndDropExample.png
- :alt: Image of the course outline, with the handle for a unit selected for drag
-     and drop
+ :alt: Image of the course outline, with the handle for a unit selected for  drag and drop
 
 When you move an element, a blue line indicates where the element will land when
 you release the mouse.
@@ -440,3 +439,25 @@ you release the mouse.
 .. image:: ../Images/DragAndDrop_BlueLine.png
  :alt: Image of the course outline, with a unit being dragged to a different
      location
+
+======================================
+Reorganizing Child Components
+======================================
+
+You can reorganize child components through the same drag and drop process you
+use for other objects in your course outline. You hover over the element handle
+on the right side of the screen until the mouse pointer changes to a four-headed arrow. Then, click and drag the element to the location that you want.
+
+Furthermore, when you have multiple levels of nesting, you can drag a child
+component into a different parent component, if both parents are expanded. For
+example, you can select the video component that is in Child Component A and
+drag it into Child Component B. Select the video component, and as you drag it
+into Child Component B, release the mouse button when a dashed outline of the
+component you are moving appears in the new location:
+
+.. image:: ../Images/drag_child_component.png
+ :alt: Image of dragging a child component to a new location
+
+You can also drag a child component outside of a parent, to make it at the same level as its parent.
+
+.. note:: For A/B tests, you can not drag a child component outside of a test group.
