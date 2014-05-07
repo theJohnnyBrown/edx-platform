@@ -54,10 +54,8 @@ class VideoScoring(object):
             satisfied.
         """
 
-        import ipdb; ipdb.set_trace()
-
-        if self.module_score and self.module_score == self.max_score():  # module have been scored
-            return json.dumps({})
+        # if self.module_score and self.module_score == self.max_score():  # module have been scored
+        #     return json.dumps({})
 
         active_graders = {
             name: getattr(self, name)
