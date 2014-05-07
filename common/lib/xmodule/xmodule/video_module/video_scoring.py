@@ -3,8 +3,7 @@ Contani methods for scoring video.
 """
 import json
 
-
-class VideoScoring(object):
+class VideoScoringMixin(object):
     """
     Contain method for scoring video
     """

@@ -47,7 +47,7 @@ def get_ext(filename):
 log = logging.getLogger(__name__)
 
 
-class VideoModule(VideoFields, VideoScoring, VideoStudentViewHandlers, XModule):
+class VideoModule(VideoFields, VideoScoringMixin, VideoStudentViewHandlers, XModule):
     """
     XML source example:
 
