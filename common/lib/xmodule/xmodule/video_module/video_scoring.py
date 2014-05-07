@@ -70,7 +70,7 @@ class VideoScoring(object):
 
         if not graders_updated:
             for grader_name, grader_dict in self.cumulative_score.items():
-                if grader_dict['grader_value'] != active_graders[grader_name]:
+                if grader_dict['scored'] != active_graders[grader_name]:
                     graders_values_changed = True
                     break
 
