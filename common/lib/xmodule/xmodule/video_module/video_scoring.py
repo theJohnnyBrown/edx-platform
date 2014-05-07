@@ -60,7 +60,7 @@ class VideoScoring(object):
         active_graders = {
             name: getattr(self, name)
             for name in self.fields.keys()
-            if name.startswith('grader_value') and getattr(self, name)
+            if name.startswith('scored') and getattr(self, name)
         }
 
         graders_updated = sorted(self.cumulative_score) != sorted(active_graders)
@@ -68,7 +68,7 @@ class VideoScoring(object):
 
         if not graders_updated:
             for grader_name, grader_dict in self.cumulative_score.items():
-                if grader_dict['scored'] != active_graders[grader_name]:
+                if grader_dict['grader_value'] != active_graders[grader_name]:
                     graders_values_changed = True
                     break
 
