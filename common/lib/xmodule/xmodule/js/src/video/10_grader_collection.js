@@ -34,6 +34,8 @@ function (AbstractGrader) {
             }
         };
 
+        debugger;
+
         return (hasScore) ? $.map(graders, mapping) : [];
     };
 
