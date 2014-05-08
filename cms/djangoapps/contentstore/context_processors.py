@@ -9,7 +9,7 @@ config.readfp(config_file)
 
 def doc_url(request=None):
 
-    def get_doc_url(page_token):
+    def get_online_help_info(page_token):
 
         def get_config_value(section_name, key, default_key="default"):
             try:
@@ -24,12 +24,20 @@ def doc_url(request=None):
             language_code = settings.LANGUAGE_CODE
             return get_config_value("locales", language_code)
 
+        def get_url(base_option):
+            return "{base_url}/{language}/{version}/{page_path}".format(
+                base_url=config.get("server_settings", base_option),
+                language=language_dir,
+                version=config.get("server_settings", "version"),
+                page_path=page_path,
+            )
+
         language_dir = get_langage_path(request)
         page_path = get_page_path(page_token)
 
         return {
-            "doc_url": "{}/{}/{}".format(config.get("server_settings", "base_url"), language_dir, page_path),
-            "pdf_url": "{}/{}/{}".format(config.get("server_settings", "base_pdf"), language_dir, page_path),
+            "doc_url": get_url("base_url"),
+            "pdf_url": get_url("base_pdf"),
         }
 
-    return {'doc_func': get_doc_url}
+    return {'get_online_help_info': get_online_help_info}

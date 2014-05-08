@@ -126,7 +126,7 @@
         <h2 class="sr">${_("Help &amp; Account Navigation")}</h2>
 
         <%
-          help_doc_urls = doc_url()['doc_func'](online_help_token)
+          help_doc_urls = get_online_help_info(online_help_token)
         %>
 
         <ol>
