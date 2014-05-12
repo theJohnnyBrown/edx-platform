@@ -67,13 +67,13 @@ class VideoScoringMixin(object):
 
         if not graders_updated:
             for grader_name, grader_dict in self.cumulative_score.items():
-                if grader_dict['grader_value'] != active_graders[grader_name]:
+                if grader_dict['graderValue'] != active_graders[grader_name]:
                     graders_values_changed = True
                     break
 
         if graders_updated or graders_values_changed:
             self.cumulative_score = {
-                grader_name: {'grader_status': False, 'grader_value': grader_value}
+                grader_name: {'graderStatus': False, 'graderValue': grader_value}
                 for grader_name, grader_value in active_graders.items()
             }
 

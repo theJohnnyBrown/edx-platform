@@ -332,7 +332,7 @@ function (HTML5Video, Resizer) {
         this.videoPlayer.currentTime = time || this.videoPlayer.player.getCurrentTime();
 
         if (isFinite(this.videoPlayer.currentTime)) {
-            this.el.trigger('update', [this.videoPlayer.currentTime]);
+            this.el.trigger('progress', [this.videoPlayer.currentTime]);
             this.videoPlayer.updatePlayTime(this.videoPlayer.currentTime);
 
             // We need to pause the video if current time is smaller (or equal)

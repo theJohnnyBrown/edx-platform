@@ -307,25 +307,26 @@ class VideoStudentViewHandlers(object):
         """
         Accumulate score from graders and save if all graders succeed.
         """
-        grader_name = request.POST.get('grader_name', None)
+        grader_name = request.POST.get('graderName', None)
+        score = self.weight * self.max_score()
 
         if not grader_name or grader_name not in self.graders():
             return Response(status=400)
 
-        self.cumulative_score[grader_name]['grader_status'] = True
+        # self.cumulative_score[grader_name]['grader_status'] = True
 
-        if not all([grader_dict['grader_status'] for grader, grader_dict in self.cumulative_score.items()]):
-            return Response(status=200)
+        if not all([grader_dict['graderStatus'] for grader, grader_dict in self.cumulative_score.items()]):
+            return Response(json.dumps(score), status=200)
 
-        if not(self.module_score and self.module_score == self.weight * self.max_score()):
+        if not(self.module_score and self.module_score == score):
             try:
-                self.update_score(self.weight * self.max_score())
+                self.update_score(score)
             except NotImplementedError:
                 return Response(status=501)
             except AssertionError:
                 return Response(status=500)
 
-        return Response(status=200)
+        return Response(json.dumps(score), status=200)
 
 
 class VideoStudioViewHandlers(object):

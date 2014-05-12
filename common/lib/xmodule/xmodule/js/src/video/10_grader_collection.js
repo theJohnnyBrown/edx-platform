@@ -17,8 +17,7 @@ function (AbstractGrader) {
             return new GraderCollection(element, state);
         }
 
-        var self,
-            hasScore = state.config.hasScore,
+        var hasScore = state.config.hasScore,
             graders = state.config.graders,
             conversions = {
                 'scored_on_end': 'GradeOnEnd',
@@ -27,23 +26,22 @@ function (AbstractGrader) {
 
         var mapping = function (config, name) {
             var graderName = conversions[name],
-                grader = GraderCollection[graderName];
+                Grader = GraderCollection[graderName];
 
-            if (grader && !config[0]) {
-                return new grader(element, state, config);
+            if (Grader && !config.graderStatus) {
+                return new Grader(element, state, config);
             }
         };
-
-        debugger;
 
         return (hasScore) ? $.map(graders, mapping) : [];
     };
 
-    // Write graders below this line
+    /** Write graders below this line **/
+
     GraderCollection.GradeOnEnd = AbstractGrader.extend({
         name: 'scored_on_end',
 
-        getGrader: function (element, state, config) {
+        getGrader: function (element) {
             var dfd = $.Deferred();
 
             element.on('ended', dfd.resolve);
@@ -54,20 +52,42 @@ function (AbstractGrader) {
 
     GraderCollection.GradeOnPercent = AbstractGrader.extend({
         name: 'scored_on_percent',
+        size: 100,
 
         getGrader: function (element, state, config) {
-            var dfd = $.Deferred();
+            this.dfd = $.Deferred();
+            this.element = element;
+            this.timeline = this.createTimeline(this.size);
+            this.element.on('play', _.once(this.onPlayHandler.bind(this)));
 
-            // TODO: Implement success scenario.
-            // element.on('ended', dfd.resolve);
-            element.on('update', function (event, currentTime) {
-                if (currentTime > config[1] && !config[0]) {
-                    config[0] = true;
-                    dfd.resolve();
-                }
-            });
+            return this.dfd.promise();
+        },
 
-            return dfd.promise();
+        createTimeline: function (size) {
+            return new Array(size);
+        },
+
+        getProgress: function (timeline) {
+            return _.compact(timeline).length;
+        },
+
+        onPlayHandler: function (event) {
+            var duration = state.videoPlayer.duration(),
+                waitTime = 1000 * duration/this.size;
+
+            this.element.on(
+                'progress',
+                _.throttle(this.onProgressHandler.bind(this), waitTime)
+            );
+        },
+
+        onProgressHandler: function (event, currentTime) {
+            var position = Math.floor(100 * currentTime/duration);
+
+            this.timeline[position] = true;
+            if (this.getProgress(timeline) >= this.config.graderValue) {
+                this.dfd.resolve();
+            }
         }
     });
 

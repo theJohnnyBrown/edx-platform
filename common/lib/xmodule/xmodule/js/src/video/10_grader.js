@@ -8,7 +8,7 @@ function(GraderCollection) {
      * Grader module.
      * @exports video/00_abstract_grader.js
      * @constructor
-     * @param {object} state The object containing the state of the video
+     * @param {Object} state The object containing the state of the video
      * player.
      * @return {jquery Promise}
      */
@@ -60,23 +60,9 @@ function(GraderCollection) {
         },
 
         /**
-         * Sends results of grading to the server.
-         * @return {jquery Promise}
-         */
-        sendGrade: function () {
-            return $.ajaxWithPrefix({
-                url: this.url,
-                type: 'POST',
-                notifyOnError: false,
-                success: this.onSuccess.bind(this),
-                error: this.onError.bind(this)
-            });
-        },
-
-        /**
          * Updates scores on the front-end.
-         * @param {number|string} points Score achieved by the student.
-         * @param {number|string} totalPoints Maximum number of points
+         * @param {Number|String} points Score achieved by the student.
+         * @param {Number|String} totalPoints Maximum number of points
          * achievable.
          */
         updateScores: function (points, totalPoints) {
@@ -93,7 +79,7 @@ function(GraderCollection) {
 
         /**
          * Creates status element and inserts it to the DOM.
-         * @param {string} message Status message.
+         * @param {String} message Status message.
          */
         createStatusElement: function (message) {
             this.statusElement = $([
@@ -114,8 +100,8 @@ function(GraderCollection) {
 
         /**
          * Updates status message by the text passed as argument.
-         * @param {string} text Text of status message.
-         * @param {string} type The type of the message: error or success.
+         * @param {String} text Text of status message.
+         * @param {String} type The type of the message: error or success.
          */
         updateStatusText: function (text, type) {
             if (text) {
@@ -135,7 +121,7 @@ function(GraderCollection) {
 
         /**
          * Updates current score for the module.
-         * @param {number|string} points Score achieved by the student.
+         * @param {Number|String} points Score achieved by the student.
          */
         setScore: function (points) {
             this.score = points;
@@ -145,8 +131,8 @@ function(GraderCollection) {
 
         /**
          * Handles success response from the server after sending grade results.
-         * @param {object} response Data returned from the server.
-         * @param {string} textStatus String describing the status.
+         * @param {Object} response Data returned from the server.
+         * @param {String} textStatus String describing the status.
          * @param {jquery XHR} jqXHR
          */
         onSuccess: function (response) {
@@ -162,9 +148,9 @@ function(GraderCollection) {
         /**
          * Handles failed response from the server after sending grade results.
          * @param {jquery XHR} jqXHR
-         * @param {string} textStatus String describing the type of error that
+         * @param {String} textStatus String describing the type of error that
          * occurred and an optional exception object, if one occurred.
-         * @param {string} errorThrown Textual portion of the HTTP status.
+         * @param {String} errorThrown Textual portion of the HTTP status.
          */
         onError: function () {
             var msg = this.i18n['GRADER_ERROR'];
@@ -173,29 +159,6 @@ function(GraderCollection) {
             this.el.addClass('is-error');
         }
     };
-
-    Grader.extend = function (protoProps) {
-        var Parent = this,
-            Child = function () {
-                if ($.isFunction(this['initialize'])) {
-                    return this['initialize'].apply(this, arguments);
-                }
-            };
-
-        // inherit
-        var F = function () {};
-        F.prototype = Parent.prototype;
-        Child.prototype = new F();
-        Child.constructor = Parent;
-        Child.__super__ = Parent.prototype;
-
-        if (protoProps) {
-            $.extend(Child.prototype, protoProps);
-        }
-
-        return Child;
-    };
-
 
     return Grader;
 });

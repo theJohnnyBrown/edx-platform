@@ -71,7 +71,7 @@ function() {
             return $.ajaxWithPrefix({
                 url: this.url,
                 data: {
-                    'grader_name': this.name
+                    'graderName': this.name
                 },
                 type: 'POST',
                 notifyOnError: false

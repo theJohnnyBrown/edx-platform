@@ -34,7 +34,7 @@ from xmodule.xml_module import is_pointer_tag, name_to_pathname, deserialize_fie
 from .video_utils import create_youtube_string
 from .video_xfields import VideoFields
 from .video_handlers import VideoStudentViewHandlers, VideoStudioViewHandlers
-from .video_scoring import VideoScoring
+from .video_scoring import VideoScoringMixin
 
 from urlparse import urlparse
 
