@@ -1,15 +1,16 @@
 (function (define) {
 'use strict';
 define(
-'video/10_grader.js',
+'video/11_grader.js',
 ['video/10_grader_collection.js'],
 function(GraderCollection) {
     /**
      * Grader module.
-     * @exports video/00_abstract_grader.js
+     * @exports video/11_grader.js
      * @constructor
      * @param {Object} state The object containing the state of the video
      * player.
+     * @param {Object} i18n Object with translations.
      * @return {jquery Promise}
      */
     var Grader = function (state, i18n) {
@@ -153,7 +154,7 @@ function(GraderCollection) {
          * @param {String} errorThrown Textual portion of the HTTP status.
          */
         onError: function () {
-            var msg = this.i18n['GRADER_ERROR'];
+            var msg = this.i18n.GRADER_ERROR;
 
             this.updateStatusText(msg, 'error');
             this.el.addClass('is-error');

@@ -8,7 +8,7 @@ function (AbstractGrader) {
      * GraderCollection module.
      * @exports video/10_grader_collection.js
      * @constructor
-     * @param {object} state The object containing the state of the video
+     * @param {Object} state The object containing the state of the video
      * player.
      * @return {jquery Promise}
      */
@@ -24,16 +24,14 @@ function (AbstractGrader) {
                 'scored_on_percent': 'GradeOnPercent'
             };
 
-        var mapping = function (config, name) {
+        return (!hasScore) ? [] : $.map(graders, function (config, name) {
             var graderName = conversions[name],
                 Grader = GraderCollection[graderName];
 
             if (Grader && !config.graderStatus) {
                 return new Grader(element, state, config);
             }
-        };
-
-        return (hasScore) ? $.map(graders, mapping) : [];
+        });
     };
 
     /** Write graders below this line **/

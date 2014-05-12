@@ -8,12 +8,19 @@ function() {
      * AbstractGrader module.
      * @exports video/00_abstract_grader.js
      * @constructor
-     * @param {object} state The object containing the state of the video
+     * @param {Object} state The object containing the state of the video
      * player.
      * @return {jquery Promise}
      */
     var AbstractGrader = function () { };
 
+    /**
+     * Returns new constructor that inherits form the current constructor.
+     * @static
+     * @param {Object} protoProps The object containing which will be added to
+     * the prototype.
+     * @return {Object}
+     */
     AbstractGrader.extend = function (protoProps) {
         var Parent = this,
             Child = function () {
