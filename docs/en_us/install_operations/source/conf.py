@@ -37,7 +37,7 @@ master_doc = 'index'
 
 
 # General information about the project.
-project = u'Installing and Configuring the edX Platform'
+project = u'Installing, Configuring, and Running the edX Platform'
 copyright = u'2014, edX'
 
 # The short X.Y version.

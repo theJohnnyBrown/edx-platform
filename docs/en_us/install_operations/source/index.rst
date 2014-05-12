@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 ######################################################
-Installing and Configuring the edX Platform
+Installing, Configuring, and Running the edX Platform
 ######################################################
 
 .. toctree::
@@ -14,3 +14,5 @@ Installing and Configuring the edX Platform
    read_me
    change_log
    installation/install_devstack
+   installation/run_devstack
+   installatoin/test_devstack
