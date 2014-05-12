@@ -33,7 +33,8 @@ CSS_CLASS_NAMES = {
     'video_init': '.is-initialized',
     'video_time': 'div.vidtime',
     'video_display_name': '.vert h2',
-    'captions_lang_list': '.langs-list li'
+    'captions_lang_list': '.langs-list li',
+    'video_speed': '.speeds .value'
 }
 
 VIDEO_MODES = {
@@ -343,6 +344,20 @@ class VideoPage(PageObject):
         speed_selector = self.get_element_selector(video_display_name, 'li[data-speed="{speed}"] a'.format(speed=speed))
         self.q(css=speed_selector).first.click()
 
+    def get_speed(self, video_display_name=None):
+        """
+        Get current video speed value.
+
+         Arguments:
+            video_display_name (str or None): Display name of a Video.
+
+        Return:
+            str
+
+        """
+        speed_selector = self.get_element_selector(video_display_name, CSS_CLASS_NAMES['video_speed'])
+        return self.q(css=speed_selector).text[0]
+
     def click_player_button(self, button, video_display_name=None):
         """
         Click on `button`.
@@ -649,3 +664,52 @@ class VideoPage(PageObject):
         language_names = self.q(css=languages_selector).attrs('textContent')
 
         return dict(zip(language_codes, language_names))
+
+    def state(self, video_display_name=None):
+        """
+        Extract the current state(play, pause etc) of video
+
+        Arguments:
+            video_display_name (str or None): Display name of a Video.
+
+        Returns:
+            str
+
+        """
+        state_selector = self.get_element_selector(video_display_name, CSS_CLASS_NAMES['video_container'])
+        current_state = self.q(css=state_selector).attrs('class')[0]
+
+        if 'is-playing' in current_state:
+            return 'playing'
+        elif 'is-paused' in current_state:
+            return 'pause'
+        elif 'is-buffered' in current_state:
+            return 'buffering'
+
+    def reload_page(self):
+        """
+        Reload/Refresh the current video page.
+
+        """
+        self.browser.refresh()
+        self.wait_for_video_player_render()
+
+    def duration(self, video_display_name=None):
+        """
+        Extract video duration.
+
+        Arguments:
+            video_display_name (str or None): Display name of a Video.
+
+        Returns:
+            str: duration in format min:sec
+
+        """
+        selector = self.get_element_selector(video_display_name, CSS_CLASS_NAMES['video_time'])
+
+        # The full time has the form "0:32 / 3:14" elapsed/duration
+        all_times = self.q(css=selector).text[0]
+
+        elapsed_str, duration_str = all_times.split('/')
+
+        return duration_str.strip()
