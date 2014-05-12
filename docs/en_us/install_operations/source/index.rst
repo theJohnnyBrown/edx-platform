@@ -13,6 +13,6 @@ Installing, Configuring, and Running the edX Platform
 
    read_me
    change_log
-   installation/install_devstack
-   installation/run_devstack
-   installatoin/test_devstack
+   devstack/install_devstack
+   devstack/run_devstack
+   devstack/test_devstack
