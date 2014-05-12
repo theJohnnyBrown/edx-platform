@@ -80,9 +80,9 @@ function (AbstractGrader) {
         },
 
         onProgressHandler: function (event, currentTime) {
-            var position = Math.floor(100 * currentTime/duration);
+            var position = Math.floor(this.size * currentTime/duration);
 
-            this.timeline[position] = true;
+            this.timeline[position] = 1;
             if (this.getProgress(timeline) >= this.config.graderValue) {
                 this.dfd.resolve();
             }
