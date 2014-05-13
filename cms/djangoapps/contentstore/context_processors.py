@@ -24,20 +24,27 @@ def doc_url(request=None):
             language_code = settings.LANGUAGE_CODE
             return get_config_value("locales", language_code)
 
-        def get_url(base_option):
-            return "{base_url}/{language}/{version}/{page_path}".format(
-                base_url=config.get("server_settings", base_option),
+        def get_doc_url():
+            return "{url_base}/{language}/{version}/{page_path}".format(
+                url_base=config.get("help_settings", "url_base"),
                 language=language_dir,
-                version=config.get("server_settings", "version"),
+                version=config.get("help_settings", "version"),
                 page_path=page_path,
+            )
+
+        def get_pdf_url():
+            return "{pdf_base}/{version}/{pdf_file}".format(
+                pdf_base=config.get("pdf_settings", "pdf_base"),
+                version=config.get("help_settings", "version"),
+                pdf_file=config.get("pdf_settings", "pdf_file"),
             )
 
         language_dir = get_langage_path(request)
         page_path = get_page_path(page_token)
 
         return {
-            "doc_url": get_url("base_url"),
-            "pdf_url": get_url("base_pdf"),
+            "doc_url": get_doc_url(),
+            "pdf_url": get_pdf_url(),
         }
 
     return {'get_online_help_info': get_online_help_info}
