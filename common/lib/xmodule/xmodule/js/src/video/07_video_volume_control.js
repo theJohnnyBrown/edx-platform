@@ -8,8 +8,8 @@ function() {
      * Video volume control module.
      * @exports video/07_video_volume_control.js
      * @constructor
-     * @param {object} state The object containing the state of the video
-     * @param {object} i18n The object containing strings with translations.
+     * @param {Object} state The object containing the state of the video
+     * @param {Object} i18n The object containing strings with translations.
      * @return {jquery Promise}
      */
     var VolumeControl = function(state, i18n) {
@@ -77,7 +77,7 @@ function() {
             });
 
             // We provide an independent behavior to adjust volume level.
-            // Therefore, we no need redundant focusing on slider in TAB
+            // Therefore, we do not need redundant focusing on slider in TAB
             // order.
             container.find('a').attr('tabindex', -1);
         },
@@ -114,7 +114,7 @@ function() {
 
         /**
          * Returns current volume level.
-         * @return {number}
+         * @return {Number}
          */
         getVolume: function() {
             return this.volume;
@@ -122,10 +122,10 @@ function() {
 
         /**
          * Sets current volume level.
-         * @param {number} volume Suggested volume level
-         * @param {boolean} [silent] Sets the new volume level without
+         * @param {Number} volume Suggested volume level
+         * @param {Boolean} [silent] Sets the new volume level without
          * triggering `volumechange` event and updating the cookie.
-         * @param {boolean} [withoutSlider] Disables updating the slider.
+         * @param {Boolean} [withoutSlider] Disables updating the slider.
          */
         setVolume: function(volume, silent, withoutSlider) {
             if (volume === this.getVolume()) {
@@ -166,7 +166,7 @@ function() {
 
         /**
          * Mutes or unmutes volume.
-         * @param {number} muteStatus Flag to mute/unmute volume.
+         * @param {Number} muteStatus Flag to mute/unmute volume.
          */
         mute: function(muteStatus) {
             var volume;
@@ -183,7 +183,7 @@ function() {
 
         /**
          * Returns current volume state (is it muted or not?).
-         * @return {boolean}
+         * @return {Boolean}
          */
         getMuteStatus: function () {
             return this.volume === 0;
@@ -191,7 +191,7 @@ function() {
 
         /**
          * Updates the volume button view.
-         * @param {boolean} isMuted Flag to use muted or unmuted view.
+         * @param {Boolean} isMuted Flag to use muted or unmuted view.
          */
         updateMuteButtonView: function(isMuted) {
             var action = isMuted ? 'addClass' : 'removeClass';
@@ -207,7 +207,7 @@ function() {
         /**
          * Checks and updates the state of the volume button relatively to
          * volume level.
-         * @param {number} volume Volume level.
+         * @param {Number} volume Volume level.
          */
         checkMuteButtonStatus: function (volume) {
             if (volume <= this.min) {
@@ -317,7 +317,7 @@ function() {
         /**
          * Volumechange event handler.
          * @param {jquery Event} event
-         * @param {number} volume Volume level.
+         * @param {Number} volume Volume level.
          */
         onVolumeChangeHandler: function(event, volume) {
             this.checkMuteButtonStatus(volume);
@@ -329,9 +329,9 @@ function() {
      * @constructor
      * @private
      * @param {jquery $} button The volume button.
-     * @param {number} min Minimum value for the volume slider.
-     * @param {number} max Maximum value for the volume slider.
-     * @param {object} i18n The object containing strings with translations.
+     * @param {Number} min Minimum value for the volume slider.
+     * @param {Number} max Maximum value for the volume slider.
+     * @param {Object} i18n The object containing strings with translations.
      */
     var Accessibility = function (button, min, max, i18n) {
         this.min = min;
@@ -357,7 +357,7 @@ function() {
 
         /**
          * Updates text of the live region.
-         * @param {number} volume Volume level.
+         * @param {Number} volume Volume level.
          */
         update: function(volume) {
             this.liveRegion.text([
@@ -368,7 +368,7 @@ function() {
 
         /**
          * Returns a string describing the level of volume.
-         * @param {number} volume Volume level.
+         * @param {Number} volume Volume level.
          */
         getVolumeDescription: function(volume) {
             if (volume === 0) {
@@ -393,8 +393,8 @@ function() {
      * Module responsible for the work with volume cookie.
      * @constructor
      * @private
-     * @param {number} min Minimum value for the volume slider.
-     * @param {number} max Maximum value for the volume slider.
+     * @param {Number} min Minimum value for the volume slider.
+     * @param {Number} max Maximum value for the volume slider.
      */
     var CookieManager = function (min, max) {
         this.min = min;
@@ -404,8 +404,8 @@ function() {
 
     CookieManager.prototype = {
         /**
-         * Returns volume level form the cookie.
-         * @return {number} Volume level.
+         * Returns volume level from the cookie.
+         * @return {Number} Volume level.
          */
         getVolume: function() {
             var volume = parseInt($.cookie(this.cookieName), 10);
@@ -422,7 +422,7 @@ function() {
 
         /**
          * Updates volume cookie.
-         * @param {number} volume Volume level.
+         * @param {Number} volume Volume level.
          */
         setVolume: function(value) {
             $.cookie(this.cookieName, value, {
