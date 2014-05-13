@@ -17,7 +17,6 @@ from xmodule.video_module import VideoDescriptor
 
 from . import BaseTestXmodule
 from .test_video_xml import SOURCE_XML
-from .test_video_handlers import TestVideo
 
 
 class TestVideoScoring(BaseTestXmodule):
@@ -69,8 +68,8 @@ class TestVideoScoring(BaseTestXmodule):
         self.assertDictEqual(
             json.loads(self.item.graders()),
             {
-                'scored_on_end': [False, True],
-                'scored_on_percent': [False, 75]
+                u'scored_on_end': {u'graderStatus': False, u'graderValue': True},
+                u'scored_on_percent': {u'graderStatus': False, u'graderValue': 75}
             }
         )
 
