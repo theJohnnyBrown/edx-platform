@@ -522,6 +522,34 @@ class YouTubeVideoTest(VideoBaseTest):
         self.video.select_language('en')
         self.assertIn('Hi, welcome to Edx.', self.video.captions_text)
 
+    def test_video_is_graded(self):
+        """
+        Scenario: Video component is graded on percent
+        Given the course has a Video component in "Youtube" mode
+        And I see progress massage is "1.0 points possible"
+        And I do not see status message
+        And I click video button "play"
+        Then I see status and progress messages are visible
+        And I see progress massage is "(1.0 / 1.0 points)"
+        And I see status massage is "This video was successfully scored!"
+        """
+        data = {'has_score': True, 'scored_on_percent': 1}
+        self.metadata = self.metadata_for_mode('youtube', additional_data=data)
+
+        self.navigate_to_video()
+
+        # self.assertEquals(self.video.progress_message_text, '1.0 points possible')
+        # self.assertFalse(self.video.is_status_message_shown)
+
+        self.video.click_player_button('play')
+        self.video.wait_for_status_message();
+
+        self.assertTrue(self.video.is_status_message_shown)
+        self.assertTrue(self.video.is_progress_message_shown)
+
+        # self.assertEquals(self.video.status_message_text, '(1.0 / 1.0 points)')
+        # self.assertEquals(self.video.progress_message_text, 'This video was successfully scored!')
+
 
 class YouTubeHtml5VideoTest(VideoBaseTest):
     """ Test YouTube HTML5 Video Player """
