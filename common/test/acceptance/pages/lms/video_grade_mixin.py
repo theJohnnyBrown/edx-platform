@@ -9,8 +9,8 @@ from bok_choy.javascript import wait_for_js, js_defined
 
 
 SELECTORS = {
-    'status': '.video-status',
-    'progress': '.video-progress-message',
+    'status': '.video-feedback-message',
+    'progress': '.video-progress',
 }
 
 
@@ -79,3 +79,22 @@ class VideoGradeMixin(object):
         selector = self.get_element_selector(video_display_name, SELECTORS['progress'])
         return self.q(css=selector).text[0]
 
+    def wait_for_status_message(self, video_display_name=None):
+        """
+        Wait until status message occurs.
+
+        Arguments:
+            video_display_name (str or None): Display name of a Video.
+
+        """
+        def _check_message():
+            """
+            Event occurred promise check.
+
+            Returns:
+                bool: is event occurred.
+
+            """
+            return self.q(css=SELECTORS['status']).visible
+
+        EmptyPromise(_check_message, 'Message is shown', timeout=200).fulfill()
