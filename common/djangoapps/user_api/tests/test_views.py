@@ -8,11 +8,13 @@ from student.tests.factories import UserFactory
 from unittest import SkipTest
 from user_api.models import UserPreference
 from user_api.tests.factories import UserPreferenceFactory
+from django_comment_common.models import Role
 
 
 TEST_API_KEY = "test_api_key"
 USER_LIST_URI = "/user_api/v1/users/"
 USER_PREFERENCE_LIST_URI = "/user_api/v1/user_prefs/"
+ROLE_LIST_URI = "/user_api/v1/roles/Moderator/"
 
 
 @override_settings(EDX_API_KEY=TEST_API_KEY)
@@ -104,6 +106,18 @@ class EmptyUserTestCase(ApiTestCase):
         self.assertEqual(result["results"], [])
 
 
+class EmptyRoleTestCase(ApiTestCase):
+    course_id = "org/course/run"
+    LIST_URI = ROLE_LIST_URI + "?course_id=" + course_id
+
+    def test_get_list_empty(self):
+        result = self.get_json(self.LIST_URI)
+        self.assertEqual(result["count"], 0)
+        self.assertIsNone(result["next"])
+        self.assertIsNone(result["previous"])
+        self.assertEqual(result["results"], [])
+
+
 class UserApiTestCase(ApiTestCase):
     def setUp(self):
         super(UserApiTestCase, self).setUp()
@@ -119,6 +133,61 @@ class UserApiTestCase(ApiTestCase):
             UserPreferenceFactory.create(user=self.users[0], key="key1"),
             UserPreferenceFactory.create(user=self.users[1], key="key0")
         ]
+
+
+class RoleTestCase(UserApiTestCase):
+    course_id = "org/course/run"
+    LIST_URI = ROLE_LIST_URI + "?course_id=" + course_id
+
+    def setUp(self):
+        super(RoleTestCase, self).setUp()
+
+    def test_options_list(self):
+        self.assertAllowedMethods(self.LIST_URI, ["OPTIONS", "GET", "HEAD"])
+
+    def test_post_list_not_allowed(self):
+        self.assertHttpMethodNotAllowed(self.request_with_auth("post", self.LIST_URI))
+
+    def test_put_list_not_allowed(self):
+        self.assertHttpMethodNotAllowed(self.request_with_auth("put", self.LIST_URI))
+
+    def test_patch_list_not_allowed(self):
+        raise SkipTest("Django 1.4's test client does not support patch")
+
+    def test_delete_list_not_allowed(self):
+        self.assertHttpMethodNotAllowed(self.request_with_auth("delete", self.LIST_URI))
+
+    def test_list_unauthorized(self):
+        self.assertHttpForbidden(self.client.get(self.LIST_URI))
+
+    @override_settings(DEBUG=True)
+    @override_settings(EDX_API_KEY=None)
+    def test_debug_auth(self):
+        self.assertHttpOK(self.client.get(self.LIST_URI))
+
+    @override_settings(DEBUG=False)
+    @override_settings(EDX_API_KEY=TEST_API_KEY)
+    def test_basic_auth(self):
+        # ensure that having basic auth headers in the mix does not break anything
+        self.assertHttpOK(
+            self.request_with_auth("get", self.LIST_URI,
+                                   **self.basic_auth("someuser", "somepass")))
+        self.assertHttpForbidden(
+            self.client.get(self.LIST_URI, **self.basic_auth("someuser", "somepass")))
+
+    def test_get_list_nonempty(self):
+        roles = Role.objects.get_or_create(name="Moderator", course_id=self.course_id)
+        role = roles[0]
+        for user in self.users:
+            user.roles.add(role)
+        result = self.get_json(self.LIST_URI)
+        self.assertEqual(result["count"], 1)
+        self.assertIsNone(result["next"])
+        self.assertIsNone(result["previous"])
+        users = result["results"][0]["users"]
+        for user in self.users:
+            self.assertTrue(user.email in users)
+        self.assertEquals(len(users), len(self.users))
 
 
 class UserViewSetTest(UserApiTestCase):
