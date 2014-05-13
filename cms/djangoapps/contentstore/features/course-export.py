@@ -6,11 +6,16 @@ from component_settings_editor_helpers import enter_xml_in_advanced_problem
 from nose.tools import assert_true, assert_equal
 
 
-@step('I export the course$')
-def i_export_the_course(step):
+@step('I go to the export page$')
+def i_go_to_the_export_page(step):
     world.click_tools()
     link_css = 'li.nav-course-tools-export a'
     world.css_click(link_css)
+
+
+@step('I export the course$')
+def i_export_the_course(step):
+    i_go_to_the_export_page()
     world.css_click('a.action-export')
 
 
