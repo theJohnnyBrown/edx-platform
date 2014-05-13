@@ -723,3 +723,18 @@ class Html5VideoTest(VideoBaseTest):
         self.assertTrue(self.video.is_video_rendered('html5'))
 
         self.assertTrue(all([source in HTML5_SOURCES for source in self.video.sources()]))
+
+    def test_video_is_graded(self):
+        """
+        Scenario: Video component is graded on percent
+        Given the course has a Video component in "HTML5" mode
+        Then the video has rendered in "HTML5" mode
+        And video sources are correct
+        """
+        self.metadata = self.metadata_for_mode('html5')
+
+        self.navigate_to_video()
+
+        self.assertTrue(self.video.is_video_rendered('html5'))
+
+        self.assertTrue(all([source in HTML5_SOURCES for source in self.video.sources()]))
