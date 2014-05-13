@@ -74,7 +74,7 @@ class Command(BaseCommand):
                 course_id__exact=course_id, mode__exact='audit')
 
             cert_data[course_id] = {'current_enrolled': enrolled_students.count(),
-                                    'total_enrolled': total_students.count()
+                                    'total_enrolled': total_students.count(),
                                     'verified_total': verified_total.count(),
                                     'honor_total': honor_total.count(),
                                     'audit_total': audit_total.count()}
