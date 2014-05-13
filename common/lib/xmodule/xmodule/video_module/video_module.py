@@ -186,6 +186,7 @@ class VideoDescriptor(VideoFields, VideoStudioViewHandlers, TabsEditingDescripto
     module_class = VideoModule
     transcript = module_attr('transcript')
     grade_handler = module_attr('grade_handler')
+    graders = module_attr('graders')
 
     tabs = [
         {

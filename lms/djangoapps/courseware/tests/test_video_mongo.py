@@ -20,7 +20,21 @@ from .test_video_xml import SOURCE_XML
 from .test_video_handlers import TestVideo
 
 
-class TestVideoYouTube(TestVideo):
+class VideoHTMLRenderMixin(object):
+
+    def grading_part_of_context(self):
+        return {
+            'grade_url': self.item_descriptor.xmodule_runtime.handler_url(
+                self.item_descriptor, 'grade_handler'
+            ).rstrip('/?'),
+            'has_score': json.dumps(self.item_descriptor.has_score),
+            'max_score': json.dumps(self.item_descriptor.max_score()),
+            'module_score': json.dumps(self.item_descriptor.module_score if self.item_descriptor.module_score else 0),
+            'graders': self.item_descriptor.graders(),
+        }
+
+
+class TestVideoYouTube(TestVideo, VideoHTMLRenderMixin):
     METADATA = {}
 
     def test_video_constructor(self):
@@ -65,13 +79,15 @@ class TestVideoYouTube(TestVideo):
             ).rstrip('/?'),
         }
 
+        expected_context.update(self.grading_part_of_context())
+
         self.assertEqual(
             context,
             self.item_descriptor.xmodule_runtime.render_template('video.html', expected_context),
         )
 
 
-class TestVideoNonYouTube(TestVideo):
+class TestVideoNonYouTube(TestVideo, VideoHTMLRenderMixin):
     """Integration tests: web client + mongo."""
     DATA = """
         <video show_captions="true"
@@ -132,14 +148,14 @@ class TestVideoNonYouTube(TestVideo):
                 self.item_descriptor, 'transcript', 'available_translations'
             ).rstrip('/?')
         }
-
+        expected_context.update(self.grading_part_of_context())
         self.assertEqual(
             context,
             self.item_descriptor.xmodule_runtime.render_template('video.html', expected_context),
         )
 
 
-class TestGetHtmlMethod(BaseTestXmodule):
+class TestGetHtmlMethod(BaseTestXmodule, VideoHTMLRenderMixin):
     '''
     Make sure that `get_html` works correctly.
     '''
@@ -243,6 +259,7 @@ class TestGetHtmlMethod(BaseTestXmodule):
 
             context = self.item_descriptor.render('student_view').content
 
+            expected_context.update(self.grading_part_of_context())
             expected_context.update({
                 'transcript_download_format': None if self.item_descriptor.track and self.item_descriptor.download_track else 'srt',
                 'transcript_languages': '{"en": "English"}' if not data['transcripts'] else json.dumps({"uk": u'Українська'}),
@@ -349,6 +366,8 @@ class TestGetHtmlMethod(BaseTestXmodule):
             'transcript_languages': '{"en": "English"}',
         }
 
+
+
         for data in cases:
             DATA = SOURCE_XML.format(
                 download_video=data['download_video'],
@@ -358,6 +377,7 @@ class TestGetHtmlMethod(BaseTestXmodule):
             self.initialize_module(data=DATA)
             context = self.item_descriptor.render('student_view').content
 
+            expected_context.update(self.grading_part_of_context())
             expected_context.update({
                 'transcript_translation_url': self.item_descriptor.xmodule_runtime.handler_url(
                     self.item_descriptor, 'transcript', 'translation'
