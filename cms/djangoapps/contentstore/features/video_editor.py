@@ -147,7 +147,7 @@ def correct_video_settings(_step):
         ['Downloadable Transcript URL', '', False],
         ['Scored', 'False', False],
         ['Scored on video end', 'False', False],
-        ['Scored viewed parentage', '', False],
+        ['Scored viewed percentage', '', False],
         ['Show Transcript', 'True', False],
         ['Transcript Languages', '', False],
         ['Upload Handout', '', False],
