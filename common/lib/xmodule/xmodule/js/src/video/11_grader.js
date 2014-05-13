@@ -84,11 +84,12 @@ function(GraderCollection) {
          */
         createStatusElement: function (message) {
             this.statusElement = $([
-                '<div class="problem-feedback">',
-                    '<h4 class="problem-feedback-label">',
+                '<div class="problem-feedback video-feedback">',
+                    '<h4 class="problem-feedback-label video-feedback-label">',
                         this.i18n['Feedback on your work from the grader:'],
                     '</h4>',
-                    '<div class="problem-feedback-message">',
+                    '<div ',
+                    'class="problem-feedback-message video-feedback-message">',
                         message ? message : '',
                     '</div>',
                 '</div>'
