@@ -10,10 +10,9 @@ from xmodule.modulestore.split_migrator import SplitMigrator
 from xmodule.modulestore.mongo import draft
 from xmodule.modulestore.tests import test_location_mapper
 from xmodule.modulestore.tests.test_split_w_old_mongo import SplitWMongoCourseBoostrapper
-from nose.tools import nottest
+from xblock.fields import Reference, ReferenceList, ReferenceValueDict
 
 
-@nottest
 class TestMigration(SplitWMongoCourseBoostrapper):
     """
     Test the split migrator
@@ -181,8 +180,8 @@ class TestMigration(SplitWMongoCourseBoostrapper):
             self.loc_mapper.translate_locator_to_location(split_dag_root.location).replace(revision=None)
         )
         # compare all fields but children
-        for name in presplit_dag_root.fields.iterkeys():
-            if name != 'children':
+        for name, field in presplit_dag_root.fields.iteritems():
+            if not isinstance(field, (Reference, ReferenceList, ReferenceValueDict)):
                 self.assertEqual(
                     getattr(presplit_dag_root, name),
                     getattr(split_dag_root, name),
