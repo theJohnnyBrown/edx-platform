@@ -15,7 +15,7 @@ def i_go_to_the_export_page(step):
 
 @step('I export the course$')
 def i_export_the_course(step):
-    i_go_to_the_export_page()
+    step.given('I go to the export page')
     world.css_click('a.action-export')
 
 
@@ -35,7 +35,7 @@ def i_enter_bad_xml(step):
 
 
 @step('I edit and enter an ampersand$')
-def i_enter_bad_xml(step):
+def i_enter_an_ampersand(step):
     enter_xml_in_advanced_problem(step, "<problem>&</problem>")
 
 
