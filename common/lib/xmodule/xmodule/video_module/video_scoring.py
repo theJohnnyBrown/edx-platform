@@ -2,6 +2,9 @@
 Contani methods for scoring video.
 """
 import json
+import logging
+
+log = logging.getLogger(__name__)
 
 class VideoScoringMixin(object):
     """
