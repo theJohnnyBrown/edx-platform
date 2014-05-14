@@ -538,17 +538,17 @@ class YouTubeVideoTest(VideoBaseTest):
 
         self.navigate_to_video()
 
-        # self.assertEquals(self.video.progress_message_text, '1.0 points possible')
-        # self.assertFalse(self.video.is_status_message_shown)
+        self.assertEquals(self.video.progress_message_text(), '1.0 points possible')
+        self.assertFalse(self.video.is_status_message_shown())
 
         self.video.click_player_button('play')
         self.video.wait_for_status_message();
 
-        self.assertTrue(self.video.is_status_message_shown)
-        self.assertTrue(self.video.is_progress_message_shown)
+        self.assertTrue(self.video.is_status_message_shown())
+        self.assertTrue(self.video.is_progress_message_shown())
 
-        # self.assertEquals(self.video.status_message_text, '(1.0 / 1.0 points)')
-        # self.assertEquals(self.video.progress_message_text, 'This video was successfully scored!')
+        self.assertEquals(self.video.progress_message_text(), '(1.0 / 1.0 points)')
+        self.assertEquals(self.video.status_message_text(), 'This video was successfully scored!')
 
 
 class YouTubeHtml5VideoTest(VideoBaseTest):
@@ -752,17 +752,3 @@ class Html5VideoTest(VideoBaseTest):
 
         self.assertTrue(all([source in HTML5_SOURCES for source in self.video.sources()]))
 
-    def test_video_is_graded(self):
-        """
-        Scenario: Video component is graded on percent
-        Given the course has a Video component in "HTML5" mode
-        Then the video has rendered in "HTML5" mode
-        And video sources are correct
-        """
-        self.metadata = self.metadata_for_mode('html5')
-
-        self.navigate_to_video()
-
-        self.assertTrue(self.video.is_video_rendered('html5'))
-
-        self.assertTrue(all([source in HTML5_SOURCES for source in self.video.sources()]))

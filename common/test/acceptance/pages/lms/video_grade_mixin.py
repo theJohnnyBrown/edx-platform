@@ -19,7 +19,6 @@ class VideoGradeMixin(object):
     Video player in the courseware.
     """
 
-    @property
     def is_status_message_shown(self, video_display_name=None):
         """
         Checks if video player status message shown.
@@ -34,7 +33,6 @@ class VideoGradeMixin(object):
         selector = self.get_element_selector(video_display_name, SELECTORS['status'])
         return self.q(css=selector).visible
 
-    @property
     def status_message_text(self, video_display_name=None):
         """
         Extract video player status message text.
@@ -49,7 +47,6 @@ class VideoGradeMixin(object):
         selector = self.get_element_selector(video_display_name, SELECTORS['status'])
         return self.q(css=selector).text[0]
 
-    @property
     def is_progress_message_shown(self, video_display_name=None):
         """
         Checks if video player progress message shown.
@@ -64,7 +61,6 @@ class VideoGradeMixin(object):
         selector = self.get_element_selector(video_display_name, SELECTORS['progress'])
         return self.q(css=selector).visible
 
-    @property
     def progress_message_text(self, video_display_name=None):
         """
         Extract video player progress message text.
