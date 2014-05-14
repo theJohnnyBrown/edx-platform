@@ -70,8 +70,8 @@ function(GraderCollection) {
             var msg = interpolate(
                     this.i18n['(%(points)s / %(total_points)s points)'],
                     {
-                        'points': points,
-                        'total_points': totalPoints
+                        'points': Number(points).toFixed(1),
+                        'total_points': Number(totalPoints).toFixed(1)
                     }, true
                 );
 
@@ -85,13 +85,7 @@ function(GraderCollection) {
         createStatusElement: function (message) {
             this.statusElement = $([
                 '<div class="problem-feedback video-feedback">',
-                    '<h4 class="problem-feedback-label video-feedback-label">',
-                        this.i18n['Feedback on your work from the grader:'],
-                    '</h4>',
-                    '<div ',
-                    'class="problem-feedback-message video-feedback-message">',
-                        message ? message : '',
-                    '</div>',
+                    message ? message : '',
                 '</div>'
             ].join(''));
 
@@ -142,7 +136,7 @@ function(GraderCollection) {
                 this.setScore(response);
                 this.el.addClass('is-scored');
                 this.updateStatusText(
-                    this.i18n['This video was successfully scored!']
+                    this.i18n['You\'ve received credit for viewing this video.']
                 );
             }
         },

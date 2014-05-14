@@ -152,22 +152,26 @@ class VideoFields(object):
     )
 
     has_score = Boolean(
-        help="Select True if this component has a numerical score that will be included in the overall course grade.",
-        display_name="Scored",
+        help="Select True if students receive a numerical score for viewing or interacting with the video.",
+        display_name="Video Is Scored",
         scope=Scope.settings,
         default=False,
     )
 
     scored_on_end = Boolean(
-        help="Grades the video on video end.",
-        display_name="Scored on video end",
+        help="Select True if students receive a score for viewing all or part of the video.",
+        display_name="Video Is Scored by Percent Viewed",
         scope=Scope.settings,
         default=False,
     )
 
     scored_on_percent = Integer(
-        help="Defines percentage of time that students need to watch the video will be scored successfully.",
-        display_name="Scored viewed percentage",
+        help=(
+            "The minimum percentage of the video that students must watch to receive credit. "
+            "Enter a number between 1 and 100, without a percent sign. "
+            "Partial credit is not possible."
+        ),
+        display_name="Video Percent to View",
         values={"min": 0, "max": 100},
         scope=Scope.settings,
     )
@@ -181,9 +185,9 @@ class VideoFields(object):
     weight = Float(
         display_name="Weight",
         help=(
-            "Enter the number of points possible for this component."
-            "The default value is 1.0.  "
-            "This setting is only used when Scored is set to True."
+            "The number of points that students receive "
+            "if they view the required video. To use this setting, "
+            "you must set Video Is Scored to True."
         ),
         default=1.0,
         scope=Scope.settings,

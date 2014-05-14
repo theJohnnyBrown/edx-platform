@@ -9,7 +9,10 @@
     <div class="problem-progress video-progress">
         % if module_score is not 'null':
             ## Translators: "points" is the student's achieved score, and "total_points" is the maximum number of points achievable.
-            (${_("{points} / {total_points} points").format(points=module_score, total_points=max_score)})
+            (${_("{points} / {total_points} points").format(
+              points=module_score,
+              total_points=max_score
+            )})
         % else:
             ## Translators: "total_points" is the maximum number of points achievable
             (${_("{total_points} points possible").format(total_points=max_score)})

@@ -82,7 +82,7 @@ function (AbstractGrader) {
 
             this.duration = this.state.videoPlayer.duration();
             milliseconds = 1000 * this.duration;
-            waitTime = Math.max(milliseconds/100, 200);
+            waitTime = Math.max(milliseconds/100, 1000);
 
             // In case, when video less than 20 seconds, we receive less than
             // 100 events `progress` (it is trigger with interval 200 ms).

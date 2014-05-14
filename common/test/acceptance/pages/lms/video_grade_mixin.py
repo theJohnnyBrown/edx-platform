@@ -9,7 +9,7 @@ from bok_choy.javascript import wait_for_js, js_defined
 
 
 SELECTORS = {
-    'status': '.video-feedback-message',
+    'status': '.video-feedback',
     'progress': '.video-progress',
 }
 
@@ -31,7 +31,7 @@ class VideoGradeMixin(object):
 
         """
         selector = self.get_element_selector(video_display_name, SELECTORS['status'])
-        return self.q(css=selector).visible
+        return self.q(css=selector).present
 
     def status_message_text(self, video_display_name=None):
         """
@@ -91,6 +91,6 @@ class VideoGradeMixin(object):
                 bool: is event occurred.
 
             """
-            return self.q(css=SELECTORS['status']).visible
+            return self.q(css=SELECTORS['status']).present
 
         EmptyPromise(_check_message, 'Message is shown', timeout=200).fulfill()

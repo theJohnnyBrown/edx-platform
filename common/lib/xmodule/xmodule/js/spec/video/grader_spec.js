@@ -6,14 +6,10 @@ function (Grader, i18n) {
 describe('VideoGrader', function () {
     var SCORED_TEXT = '(0.5 / 1.0 points)',
         POSSIBLE_SCORES = '1.0 points possible',
-        SUCCESS_MESSAGE = [
-            'Feedback on your work from the grader:',
-            'This video was successfully scored!'
-        ].join(''),
+        SUCCESS_MESSAGE = 'You\'ve received credit for viewing this video.',
         ERROR_MESSAGE = [
-            'Feedback on your work from the grader:',
-            'Error happens. Sorry for the inconvenience, restart ',
-            'the page and try again.'
+            'An error occurred. ',
+            'Please refresh the page and try viewing the video again.'
         ].join(''),
         state, grader;
 
