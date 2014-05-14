@@ -316,6 +316,7 @@ class VideoStudentViewHandlers(object):
         if not all(
             [values['graderStatus'] for name, values in self.cumulative_score.items() if name != grader_name]
         ):
+            self.cumulative_score[grader_name]['graderStatus'] = True
             return Response(json.dumps(score), status=200)
 
         if not(self.module_score and self.module_score == score):
