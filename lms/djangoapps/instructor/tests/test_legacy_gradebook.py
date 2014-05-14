@@ -67,6 +67,7 @@ class TestGradebook(ModuleStoreTestCase):
                     module_state_key=Location(item.location).url()
                 )
 
+        # TODO does this work if we change to spoc_gradebook?
         self.response = self.client.get(reverse('gradebook_legacy', args=(self.course.id,)))
 
     def test_response_code(self):
