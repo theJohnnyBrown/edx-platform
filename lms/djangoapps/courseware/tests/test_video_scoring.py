@@ -3,7 +3,7 @@
 import json
 import unittest
 from collections import OrderedDict
-from mock import patch, PropertyMock, MagicMock
+from mock import patch, PropertyMock, MagicMock, Mock
 
 from django.conf import settings
 
@@ -43,7 +43,11 @@ class TestVideoScoring(BaseTestXmodule):
         with self.assertRaises(NotImplementedError):
             self.item.update_score(0.5)
 
-        # TODO: mock get_real_user and system publish here and check of updated module score.
+        self.item.runtime.get_real_user = Mock()
+        self.item.runtime.publish = Mock()
+        self.item.update_score(0.5)
+
+        self.assertEqual(self.item.module_score, 0.5)
 
     def test_graders_only_has_score(self):
         metadata = {
