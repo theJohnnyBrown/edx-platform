@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Video xmodule tests in mongo."""
 
-from mock import patch
+from mock import patch, Mock
 import os
 import tempfile
 import textwrap
@@ -791,8 +791,16 @@ class TestVideoGradeHandler(TestVideo):
         self.assertFalse(self.item.cumulative_score[test_grader_name]['graderStatus'])
         request = Request.blank('', POST={'graderName': test_grader_name})
         response = self.item.grade_handler(request=request, dispatch='')
-        self.assertTrue(self.item.cumulative_score[test_grader_name]['graderStatus'])
+        self.assertFalse(self.item.cumulative_score[test_grader_name]['graderStatus'])
         self.assertEqual(response.status_code, 501)  # NotImplemented
 
-        # TODO mock: same as in test_video_scoring and get 200 status_code
+        self.item.runtime.get_real_user = Mock()
+        self.item.runtime.publish = Mock()
+
+        test_grader_name = 'scored_on_percent'
+        self.assertFalse(self.item.cumulative_score[test_grader_name]['graderStatus'])
+        request = Request.blank('', POST={'graderName': test_grader_name})
+        response = self.item.grade_handler(request=request, dispatch='')
+        self.assertTrue(self.item.cumulative_score[test_grader_name]['graderStatus'])
+        self.assertEqual(response.status_code, 200)
 
