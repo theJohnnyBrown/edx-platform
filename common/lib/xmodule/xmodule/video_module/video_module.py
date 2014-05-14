@@ -174,7 +174,7 @@ class VideoModule(VideoFields, VideoScoringMixin, VideoStudentViewHandlers, XMod
             'grade_url': self.runtime.handler_url(self, 'grade_handler').rstrip('/?'),
             'has_score': json.dumps(self.has_score),
             'max_score': json.dumps(self.max_score()),
-            'module_score': json.dumps(self.module_score if self.module_score else 0),
+            'module_score': json.dumps(self.module_score),
             'graders': self.graders(),
         })
 

@@ -313,14 +313,15 @@ class VideoStudentViewHandlers(object):
         if not grader_name or grader_name not in self.graders():
             return Response(status=400)
 
-        self.cumulative_score[grader_name]['graderStatus'] = True
-
-        if not all([grader_dict['graderStatus'] for grader, grader_dict in self.cumulative_score.items()]):
+        if not all(
+            [values['graderStatus'] for name, values in self.cumulative_score.items() if name != grader_name]
+        ):
             return Response(json.dumps(score), status=200)
 
         if not(self.module_score and self.module_score == score):
             try:
                 self.update_score(score)
+                self.cumulative_score[grader_name]['graderStatus'] = True
             except NotImplementedError:
                 return Response(status=501)
             except AssertionError:
