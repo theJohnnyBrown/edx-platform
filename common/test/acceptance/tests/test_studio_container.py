@@ -109,15 +109,9 @@ class DragAndDropTest(ContainerBase):
                         self.assertEqual(expected, children[idx].name)
                     break
 
-    def drag_up_one_and_verify(self, source, expected_ordering):
-        self.drag_and_verify(source, source, expected_ordering)
-
-    def drag_and_verify(self, source, target, expected_ordering, after=True):
+    def drag_and_verify(self, source, target, expected_ordering):
         container = self.go_to_container_page(make_draft=True)
-        if source == target:
-            container.drag_up_one(source)
-        else:
-            container.drag(source, target, after)
+        container.drag(source, target)
 
         self.verify_ordering(container, expected_ordering)
 
@@ -133,7 +127,7 @@ class DragAndDropTest(ContainerBase):
                              {self.group_a: [self.group_a_item_1, self.group_a_item_2]},
                              {self.group_b: [self.group_b_item_2, self.group_b_item_1]},
                              {self.group_empty: []}]
-        self.drag_up_one_and_verify(self.group_b_item_2_handle, expected_ordering)
+        self.drag_and_verify(self.group_b_item_2_handle, self.group_b_item_1_handle, expected_ordering)
 
     def test_drag_to_top(self):
         """
@@ -143,17 +137,17 @@ class DragAndDropTest(ContainerBase):
                              {self.group_a: [self.group_a_item_2]},
                              {self.group_b: [self.group_b_item_1, self.group_b_item_2]},
                              {self.group_empty: []}]
-        self.drag_and_verify(self.group_a_item_1_handle, self.group_a_handle, expected_ordering, False)
+        self.drag_and_verify(self.group_a_item_1_handle, self.group_a_handle, expected_ordering)
 
     def test_drag_into_different_group(self):
         """
-        Drag Group A Item 1 into Group B (first element).
+        Drag Group B Item 1 into Group A (first element).
         """
         expected_ordering = [{self.container_title: [self.group_a, self.group_empty, self.group_b]},
-                             {self.group_a: [self.group_a_item_2]},
-                             {self.group_b: [self.group_a_item_1, self.group_b_item_1, self.group_b_item_2]},
+                             {self.group_a: [self.group_b_item_1, self.group_a_item_1, self.group_a_item_2]},
+                             {self.group_b: [self.group_b_item_2]},
                              {self.group_empty: []}]
-        self.drag_and_verify(self.group_a_item_1_handle, self.group_b_handle, expected_ordering)
+        self.drag_and_verify(self.group_b_item_1_handle, self.group_a_item_1_handle, expected_ordering)
 
     def test_drag_group_into_group(self):
         """
