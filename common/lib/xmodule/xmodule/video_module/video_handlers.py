@@ -324,7 +324,10 @@ class VideoStudentViewHandlers(object):
                 self.update_score(score)
                 self.cumulative_score[grader_name]['graderStatus'] = True
             except NotImplementedError:
-                return Response(status=501)
+                if getattr(self.system, 'is_author_mode', False):
+                    return Response(json.dumps(score), status=200)
+                else:
+                    return Response(status=501)
             except AssertionError:
                 return Response(status=500)
 
