@@ -240,6 +240,8 @@ def get_course_enrollment_pairs(user, course_org_filter, org_filter_out_set):
     Get the relevant set of (Course, CourseEnrollment) pairs to be displayed on
     a student's dashboard.
     """
+    pairs = []
+
     for enrollment in CourseEnrollment.enrollments_for_user(user):
         try:
             course = course_from_id(enrollment.course_id)
@@ -253,11 +255,17 @@ def get_course_enrollment_pairs(user, course_org_filter, org_filter_out_set):
             elif course.location.org in org_filter_out_set:
                 continue
 
-            yield (course, enrollment)
+            pairs.append( (course, enrollment) )
         except ItemNotFoundError:
             log.error("User {0} enrolled in non-existent course {1}"
                       .format(user.username, enrollment.course_id))
 
+    ## Sort pairs in order of courseware access. If I am actively using a course, it should bubble up to the top. 
+    from courseware.models import module_modified_times
+    import datetime
+    modified_times_map = module_modified_times(user, [p[0].scope_ids.usage_id for p in pairs])
+    pairs.sort(key = lambda x:modified_times_map.get(unicode(x[0].scope_ids.usage_id), datetime.datetime(1970,1,1,1,1,1)), reverse = True)
+    return pairs
 
 def _cert_info(user, course, cert_status):
     """
