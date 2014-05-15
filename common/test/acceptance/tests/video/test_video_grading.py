@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
-
 """
 Acceptance tests for Video grading functionality.
 """
-
-# @TODO
-# 5) Verify error message and score is not stored (reload page and check progress message).
-
 from ...pages.lms.progress import ProgressPage
 from .test_video_module import VideoBaseTest
 
@@ -31,8 +26,6 @@ class VideoGradedTest(VideoBaseTest):
         actual_scores = self.progress_page.scores('Test Chapter', 'Test Section')
         self.assertEqual(actual_scores, [(1, 1)])
 
-    def _assert_error_score_message_is_shown(self):
-        pass
 
 class YouTubeVideoGradedTest(VideoGradedTest):
     """ Test YouTube Video Player """
@@ -174,20 +167,3 @@ class Html5VideoGradedTest(VideoGradedTest):
         self.course_nav.go_to_sequential('A')
 
         self._assert_video_is_scored_successfully()
-
-
-    def test_error_message_and_score_is_not_stored(self):
-        """
-
-        """
-        data = {'cumulative_score': 'just_string'}
-        self.metadata = self.metadata_for_mode('html5', additional_data=data)
-        self.navigate_to_video()
-        self._assert_video_is_not_scored()
-        self.video.click_player_button('play')
-
-        # Play the video until the end.
-        self.video.wait_for_state('finished');
-
-        self._assert_video_is_scored_successfully()
-        self._assert_video_is_graded_successfully()
