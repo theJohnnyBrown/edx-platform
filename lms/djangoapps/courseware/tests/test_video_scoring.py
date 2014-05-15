@@ -77,3 +77,12 @@ class TestVideoScoring(BaseTestXmodule):
             }
         )
 
+    def test_scored_module(self):
+        metadata = {
+            'has_score': True,
+        }
+        self.initialize_module(metadata=metadata)
+        self.item_descriptor.render('student_view')
+        self.item = self.item_descriptor.xmodule_runtime.xmodule_instance
+        self.item.module_score = 1
+        self.assertEqual(self.item.graders(), '{}')
