@@ -106,7 +106,7 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification",
             createComponent: function(template, target) {
                 var parentElement = this.findXBlockElement(target),
                     parentLocator = parentElement.data('locator'),
-                    buttonPanel = parentElement.find('.add-xblock-component'),
+                    buttonPanel = target.closest('.add-xblock-component'),
                     listPanel = buttonPanel.prev(),
                     scrollOffset = this.getScrollOffset(buttonPanel),
                     newElement = $('<li></li>').appendTo(listPanel),
