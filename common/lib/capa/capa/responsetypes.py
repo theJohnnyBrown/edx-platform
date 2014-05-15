@@ -1529,9 +1529,14 @@ class CustomResponse(LoncapaResponse):
                 student_answers=student_answers,
                 idset=idset,
                 err=err
-            );
+            )
 
-            log.error(msg)
+            log.error(
+                "[courseware.capa.responsetypes.customresponse] error getting"
+                " student answer from %s"
+                "\n idset = %s, error = %s",
+                student_answers, idset, err
+            )
             raise Exception(msg)
 
         # global variable in context which holds the Presentation MathML from dynamic math input
