@@ -23,24 +23,7 @@ class YouTubeVideoGradedTest(VideoBaseTest):
         super(YouTubeVideoGradedTest, self).setUp()
         self.progress_page = ProgressPage(self.browser, self.course_id)
 
-    def test_video_is_graded_on_percent_viewed(self):
-        """
-        Scenario: Video component is scored on percent viewed
-        Given the course has a scirable Video component in "Youtube" mode
-        And I see progress message is "1.0 points possible"
-        And I do not see status message
-        And I click video button "play"
-        Then I see status and progress messages are visible
-        And I see progress message is "(1.0 / 1.0 points)"
-        And I see status message is "You've received credit for viewing this video."
-        When I open progress page
-        Then I see current scores are "1/1"
-        """
-        data = {'has_score': True, 'scored_on_percent': 1}
-        self.metadata = self.metadata_for_mode('youtube', additional_data=data)
-
-        self.navigate_to_video()
-
+    def _assert_video_is_scored_successfully(self):
         self.assertEquals(self.video.progress_message_text(), '(1.0 points possible)')
         self.assertFalse(self.video.is_status_message_shown())
 
@@ -55,4 +38,48 @@ class YouTubeVideoGradedTest(VideoBaseTest):
         EXPECTED_SCORES = [(1, 1)]
         actual_scores = self.progress_page.scores('Test Chapter', 'Test Section')
         self.assertEqual(actual_scores, EXPECTED_SCORES)
+
+
+    def test_video_is_scored_by_percent_viewed(self):
+        """
+        Scenario: Video component is scored by percent viewed
+        Given the course has a Video component in "Youtube" mode:
+        |has_score|scored_on_end|
+        |True     |True         |
+        And I see progress message is "1.0 points possible"
+        And I do not see status message
+        And I click video button "play"
+        Then I see status and progress messages are visible
+        And I see progress message is "(1.0 / 1.0 points)"
+        And I see status message is "You've received credit for viewing this video."
+        When I open progress page
+        Then I see current scores are "1/1"
+        """
+        data = {'has_score': True, 'scored_on_end': True}
+        self.metadata = self.metadata_for_mode('youtube', additional_data=data)
+
+        self.navigate_to_video()
+        self._assert_video_is_scored_successfully()
+
+
+    def test_video_percent_to_view(self):
+        """
+        Scenario: Video Percent to View
+        Given the course has a Video component in "Youtube" mode:
+        |has_score|scored_on_percent|
+        |True     |1%               |
+        And I see progress message is "1.0 points possible"
+        And I do not see status message
+        And I click video button "play"
+        Then I see status and progress messages are visible
+        And I see progress message is "(1.0 / 1.0 points)"
+        And I see status message is "You've received credit for viewing this video."
+        When I open progress page
+        Then I see current scores are "1/1"
+        """
+        data = {'has_score': True, 'scored_on_percent': 1}
+        self.metadata = self.metadata_for_mode('youtube', additional_data=data)
+
+        self.navigate_to_video()
+        self._assert_video_is_scored_successfully()
 
