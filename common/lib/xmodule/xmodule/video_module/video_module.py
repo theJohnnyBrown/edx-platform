@@ -172,7 +172,7 @@ class VideoModule(VideoFields, VideoScoringMixin, VideoStudentViewHandlers, XMod
             'transcript_translation_url': self.runtime.handler_url(self, 'transcript', 'translation').rstrip('/?'),
             'transcript_available_translations_url': self.runtime.handler_url(self, 'transcript', 'available_translations').rstrip('/?'),
             'grade_url': self.runtime.handler_url(self, 'grade_handler').rstrip('/?'),
-            'has_score': json.dumps(self.has_score),
+            'has_score': json.dumps(self.really_has_score),
             'max_score': json.dumps(self.max_score()),
             'module_score': json.dumps(self.module_score),
             'graders': self.graders(),
@@ -187,6 +187,7 @@ class VideoDescriptor(VideoFields, VideoStudioViewHandlers, TabsEditingDescripto
     transcript = module_attr('transcript')
     grade_handler = module_attr('grade_handler')
     graders = module_attr('graders')
+    grade_videos = module_attr('grade_videos')
 
     tabs = [
         {
@@ -263,6 +264,11 @@ class VideoDescriptor(VideoFields, VideoStudioViewHandlers, TabsEditingDescripto
         editable_fields['transcripts']['type'] = 'VideoTranslations'
         editable_fields['transcripts']['urlRoot'] = self.runtime.handler_url(self, 'studio_transcript', 'translation').rstrip('/?')
         editable_fields['handout']['type'] = 'FileUploader'
+
+
+        if not self.grade_videos:
+            for field_name in ['has_score', 'scored_on_end', 'scored_on_percent', 'weight']:
+                editable_fields.pop(field_name)
 
         return editable_fields
 

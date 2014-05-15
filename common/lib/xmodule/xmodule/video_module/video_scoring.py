@@ -4,15 +4,26 @@ Contani methods for scoring video.
 import json
 import logging
 
+from .video_utils import get_course
+
+
 log = logging.getLogger(__name__)
+
 
 class VideoScoringMixin(object):
     """
     Contain method for scoring video
     """
+    @property
+    def grade_videos(self):
+        return self.get_course().grade_videos
+
+    @property
+    def really_has_score(self):
+        return self.max_score and self.grade_videos
 
     def max_score(self):
-        return self.weight if self.has_score else None
+        return self.weight if self.really_has_score else None
 
     def update_score(self, score):
         """
