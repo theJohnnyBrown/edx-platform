@@ -14,33 +14,37 @@
       </header>
 
       <div class="support">
-        <h3 class="title">${_("Studio Support")}</h3>
+        <h3 class="title">${_("edX Studio Support")}</h3>
 
         <div class="copy">
-           <p>${_("Need help with Studio? Creating a course is complex, so we're here to help. Take advantage of our documentation, help center, as well as our edX101 introduction course for course authors.")}</p>
+           <p>${_("Check out Building and Running an edX Course, our continuously updated guide to working with edX Studio. Click Help to get more information about the Studio page you're on, or click the links at the bottom of the page..")}</p>
         </div>
 
       <ul class="list-actions">
+          <%
+            help_doc_urls = get_online_help_info(online_help_token())
+          %>
+
+          <li class="action-item">
+            <a href="${help_doc_urls['pdf_url']}" target="_blank">${_("Building and Running an edX Course")}</a>
+          </li>
+
         <li class="action-item">
-          <a href="http://files.edx.org/Getting_Started_with_Studio.pdf" class="action action-primary" title="${_("This is a PDF Document")}">${_("Download Studio Documentation")}</a>
-          <span class="tip">${_("How to use Studio to build your course")}</span>
-        </li>
-        <li class="action-item">
-          <a href="http://help.edge.edx.org/" rel="external" class="action action-primary">${_("Studio Help Center")}</a>
-          <span class="tip">${_("Studio Help Center")}</span>
+          <a href="http://help.edge.edx.org/" rel="external" class="action action-primary">${_("edX Studio Author Support")}</a>
+          <span class="tip">${_("edX Studio Author Support")}</span>
         </li>
         <li class="action-item">
           <a href="https://edge.edx.org/courses/edX/edX101/How_to_Create_an_edX_Course/about" rel="external" class="action action-primary">${_("Enroll in edX101")}</a>
-          <span class="tip">${_("How to use Studio to build your course")}</span>
+          <span class="tip">${_("How to use edX Studio to build your course")}</span>
         </li>
       </ul>
       </div>
 
       <div class="feedback">
-        <h3 class="title">${_("Contact us about Studio")}</h3>
+        <h3 class="title">${_("Request help with edX Studio")}</h3>
 
         <div class="copy">
-           <p>${_("Have problems, questions, or suggestions about Studio? We're also here to listen to any feedback you want to share.")}</p>
+           <p>${_("Have problems, questions, or suggestions about edX Studio? Click the Contact Us below.")}</p>
         </div>
 
         <ul class="list-actions">
