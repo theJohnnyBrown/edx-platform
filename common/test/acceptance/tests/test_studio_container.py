@@ -214,24 +214,28 @@ class AddComponentTest(ContainerBase):
     def test_add_component_in_group(self):
         group_b_menu = 2
 
-        expected_ordering = [{self.group_b: [self.group_b_item_1, self.group_b_item_2, self.discussion_label]}]
+        expected_ordering = [{self.container_title: [self.group_a, self.group_empty, self.group_b]},
+                             {self.group_a: [self.group_a_item_1, self.group_a_item_2]},
+                             {self.group_b: [self.group_b_item_1, self.group_b_item_2, self.discussion_label]},
+                             {self.group_empty: []}]
         self.add_and_verify(group_b_menu, expected_ordering)
 
     def test_add_component_in_empty_group(self):
         group_empty_menu = 1
 
-        expected_ordering = [{self.group_empty: [self.discussion_label]}]
+        expected_ordering = [{self.container_title: [self.group_a, self.group_empty, self.group_b]},
+                             {self.group_a: [self.group_a_item_1, self.group_a_item_2]},
+                             {self.group_b: [self.group_b_item_1, self.group_b_item_2]},
+                             {self.group_empty: [self.discussion_label]}]
         self.add_and_verify(group_empty_menu, expected_ordering)
 
     def test_add_component_in_container(self):
         container_menu = 3
 
-        expected_ordering = [{self.container_title: [
-            self.group_a,
-            self.group_empty,
-            self.group_b,
-            self.discussion_label
-        ]}]
+        expected_ordering = [{self.container_title: [self.group_a, self.group_empty, self.group_b, self.discussion_label]},
+                             {self.group_a: [self.group_a_item_1, self.group_a_item_2]},
+                             {self.group_b: [self.group_b_item_1, self.group_b_item_2]},
+                             {self.group_empty: []}]
         self.add_and_verify(container_menu, expected_ordering)
 
 
@@ -249,24 +253,28 @@ class DuplicateComponentTest(ContainerBase):
 
     def test_duplicate_first_in_group(self):
         duplicate_label = self.duplicate_label.format(self.group_a_item_1)
-        expected_ordering = [{self.group_a: [self.group_a_item_1, duplicate_label, self.group_a_item_2]}]
+        expected_ordering = [{self.container_title: [self.group_a, self.group_empty, self.group_b]},
+                             {self.group_a: [self.group_a_item_1, duplicate_label, self.group_a_item_2]},
+                             {self.group_b: [self.group_b_item_1, self.group_b_item_2]},
+                             {self.group_empty: []}]
         self.duplicate_and_verify(self.group_a_item_1_action_index, expected_ordering)
 
     def test_duplicate_second_in_group(self):
         duplicate_label = self.duplicate_label.format(self.group_a_item_2)
-        expected_ordering = [{self.group_a: [self.group_a_item_1, self.group_a_item_2, duplicate_label]}]
+        expected_ordering = [{self.container_title: [self.group_a, self.group_empty, self.group_b]},
+                             {self.group_a: [self.group_a_item_1, self.group_a_item_2, duplicate_label]},
+                             {self.group_b: [self.group_b_item_1, self.group_b_item_2]},
+                             {self.group_empty: []}]
         self.duplicate_and_verify(self.group_a_item_2_action_index, expected_ordering)
 
     def test_duplicate_the_duplicate(self):
         first_duplicate_label = self.duplicate_label.format(self.group_a_item_1)
         second_duplicate_label = self.duplicate_label.format(first_duplicate_label)
 
-        expected_ordering = [{self.group_a: [
-            self.group_a_item_1,
-            first_duplicate_label,
-            second_duplicate_label,
-            self.group_a_item_2
-        ]}]
+        expected_ordering = [{self.container_title: [self.group_a, self.group_empty, self.group_b]},
+                            {self.group_a: [self.group_a_item_1, first_duplicate_label, second_duplicate_label, self.group_a_item_2]},
+                            {self.group_b: [self.group_b_item_1, self.group_b_item_2]},
+                            {self.group_empty: []}]
 
         def duplicate_twice(container):
             container.duplicate(self.group_a_item_1_action_index)
@@ -288,5 +296,8 @@ class DeleteComponentTest(ContainerBase):
         )
 
     def test_delete_first_in_group(self):
-        expected_ordering = [{self.group_a: [self.group_a_item_2]}]
+        expected_ordering = [{self.container_title: [self.group_a, self.group_empty, self.group_b]},
+                             {self.group_a: [self.group_a_item_2]},
+                             {self.group_b: [self.group_b_item_1, self.group_b_item_2]},
+                             {self.group_empty: []}]
         self.delete_and_verify(self.group_a_item_1_action_index, expected_ordering)
