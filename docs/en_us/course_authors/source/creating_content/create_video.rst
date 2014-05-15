@@ -113,12 +113,9 @@ company that provides captioning services. EdX works with `3Play Media
 <http://www.3playmedia.com>`_. `YouTube <http://www.youtube.com/>`_ also
 provides captioning services.
 
-In addition to your .srt file, you can provide other transcripts with your
-video. For example, you can provide downloadable transcripts in a text format
-such as .pdf, and you can provide transcripts in different languages.
-For more information, see :ref:`Additional Transcripts`.
+When you upload an .srt file, a .txt file is created automatically. You can allow students to download either the .srt file or the .txt file. You can also provide transcripts in different formats, such as .pdf, and you can provide transcripts in different languages.For more information, see :ref:`Additional Transcripts`.
 
-If you allow your students to downoad transcripts, a **Download transcript**
+If you allow your students to download transcripts, a **Download transcript**
 button appears under the video. Students can then select either **SubRip (.srt)
 file** or **Text (.txt) file** to download the .srt or .txt transcript.
 
@@ -210,8 +207,7 @@ Step 4. Create a Video Component
      using a video from an existing course--Studio automatically finds the
      transcript and associates the transcript with the video.
      
-     If you want to modify the transcript, click **Download Transcript for Editing**. You can
-     then make your changes and upload the new file by clicking **Upload New Transcript**.
+     If you want to modify the transcript, click **Download Transcript for Editing**. You can then make your changes and upload the new file by clicking **Upload New Transcript**.
 
    - If edX doesn't have a transcript for the video, but YouTube has a transcript, Studio automatically finds the YouTube
      transcript and asks if you want to import it. To use this YouTube
@@ -219,7 +215,7 @@ Step 4. Create a Video Component
      YouTube transcript, after Studio imports the transcript, click **Download Transcript for Editing**. You can then make your changes and upload the new file by
      clicking **Upload New Transcript**.)
 
-   - If both edX and YouTube have a transcript for your video, but the edX transcript is out of date, you'll receive a message asking if you want to replace the edX transcript with the YouTube transcript. Click **Yes, replace the edX transcript with the YouTube transcript** to use the YouTube transcript.
+   - If both edX and YouTube have a transcript for your video, but the edX transcript is out of date, you'll receive a message asking if you want to replace the edX transcript with the YouTube transcript. To use the YouTube transcript, click **Yes, replace the edX transcript with the YouTube transcript**.
 
    - If neither edX nor YouTube has a transcript for your video, and your
      transcript uses the .srt format, click **Upload New Transcript** to
@@ -258,12 +254,12 @@ The following options appear on the **Advanced** tab in the Video component.
     * - **Download Transcript Allowed**
       - Specifies whether you want to allow students to download the timed transcript. If you set this value to **True**, a link to download the file appears below the video. 
 
-        By default, students can download .srt or .txt versions of the transcript. If you want to provide the transcript for download in a different format as well, such as .pdf, upload a file to Studio by using the **Upload Handout** field. 
+        By default, Studio creates a .txt transcript when you upload an .srt transcript. Students can download the .srt or .txt versions of the transcript when you set **Download Transcript Allowed** to **True**. If you want to provide the transcript for download in a different format as well, such as .pdf, upload a file to Studio by using the **Upload Handout** field. 
 
     * - **Downloadable Transcript URL**
       - The URL for a non-.srt version of the transcript file posted on the **Files & Uploads** page or on the Internet. Students see a link to download the non-.srt transcript below the video. 
 
-        .. note:: When you add a transcript to this field, only the transcript that you add is available for download. The .srt and .txt transcripts become unavailable. If you want to provide a downloadable transcript in a format other than .srt, we recommend that you upload a handout for students by using the **Upload a Handout** field. 
+        .. note:: When you add a transcript to this field, only the transcript that you add is available for download. The .srt and .txt transcripts become unavailable. If you want to provide a downloadable transcript in a format other than .srt, we recommend that you upload a handout for students by using the **Upload Handout** field. 
 
     * - **Show Transcript**
       - Specifies whether the transcript plays along with the video by default.
@@ -288,23 +284,35 @@ The following options appear on the **Advanced** tab in the Video component.
 Additional Transcripts
 **********************
 
-By default, students can download an .srt or .txt transcript when you set **Download Transcript Allowed** to **True**. The **Download Transcript** button appears below the video, and students see the .srt and .txt options when they hover over the button.
+By default, a .txt file is created when you upload an .srt file, and students can download an .srt or .txt transcript when you set **Download Transcript Allowed** to **True**. The **Download Transcript** button appears below the video, and students see the .srt and .txt options when they hover over the button.
 
 .. image:: /Images/Video_DownTrans_srt-txt.png
    :width: 500
    :alt: Video status bar showing srt and txt transcript download options
 
-If you want to provide a downloadable transcript in a different format, we recommend that you upload a handout by using the **Upload a Handout** field. When you do this, a **Download Handout** button appears next to the **Download Transcript** button, and students can download the .srt, .txt, or handout version of the transcript.
+If you want to provide a downloadable transcript in a format such as .pdf along with the .srt and .txt transcripts, we recommend that you use the **Upload Handout** field. When you do this, a **Download Handout** button appears to the right of the **Download Transcript** button, and students can download the .srt, .txt, or handout version of the transcript.
 
 .. image:: /Images/Video_DownTrans_srt-handout.png
    :width: 500
    :alt: Video status bar showing srt, txt, and handout transcript download options
 
-If you can't provide the transcript as a handout, you can post a transcript file on the **Files & Uploads** page or on the Internet, and then add the URL for the transcript to the Video component in the **Downloadable Transcript URL** field. Students see a link to download that transcript below the video. However, **we don't recommend that you use this method**. When you use this method, only the transcript that you add is available for download. The .srt and .txt transcripts become unavailable. 
+To use the **Upload Handout** field:
+
+#. Create or obtain your transcript as a .pdf or in another format.
+#. In the Video component, click the **Advanced** tab in the Video component.
+#. Locate **Upload Handout**, and then click **Upload**.
+#. In the **Upload File** dialog box, click **Choose File**.
+#. In the dialog box, select the file on your computer, and then click **Open**.
+#. In the **Upload File** dialog box, click **Upload**.
+
+
+Before Studio added the **Upload Handout** feature, some courses posted transcript files on the **Files & Uploads** page or on the Internet, and then added a link to those files in the Video component. **We no longer recommend this method.**  When you use this method, the **Download Transcript** button appears, but only the transcript that you add is available for download. The .srt and .txt transcripts become unavailable. 
 
 .. image:: /Images/Video_DownTrans_other.png
    :width: 500
    :alt: Video status bar showing Download Transcript button without srt and txt options
+
+If you want to use this method, you can post your transcript online, and then add the URL to the transcript in the **Downloadable Transcript URL** field. However, bear in mind that students will not be able to download .srt or .txt transcripts.
 
 .. _Transcripts in Additional Languages:
 
