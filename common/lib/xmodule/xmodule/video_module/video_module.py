@@ -187,7 +187,6 @@ class VideoDescriptor(VideoFields, VideoStudioViewHandlers, TabsEditingDescripto
     transcript = module_attr('transcript')
     grade_handler = module_attr('grade_handler')
     graders = module_attr('graders')
-    grade_videos = module_attr('grade_videos')
 
     tabs = [
         {
@@ -264,7 +263,6 @@ class VideoDescriptor(VideoFields, VideoStudioViewHandlers, TabsEditingDescripto
         editable_fields['transcripts']['type'] = 'VideoTranslations'
         editable_fields['transcripts']['urlRoot'] = self.runtime.handler_url(self, 'studio_transcript', 'translation').rstrip('/?')
         editable_fields['handout']['type'] = 'FileUploader'
-
 
         if not self.grade_videos:
             for field_name in ['has_score', 'scored_on_end', 'scored_on_percent', 'weight']:
