@@ -151,7 +151,7 @@ def correct_video_settings(_step):
         ['Video Download Allowed', 'False', False],
         ['Video File URLs', '', False],
         ['Video Is Scored', 'False', False],
-        ['Video Is Scored by Percent Viewed', 'False', False],
+        ['Video Is Scored When Viewed', 'False', False],
         ['Video Percent to View', '', False],
         ['Video Start Time', '00:00:00', False],
         ['Video Stop Time', '00:00:00', False],

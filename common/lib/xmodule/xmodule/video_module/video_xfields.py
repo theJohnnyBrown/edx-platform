@@ -159,8 +159,8 @@ class VideoFields(object):
     )
 
     scored_on_end = Boolean(
-        help="Select True if students receive a score for viewing all or part of the video.",
-        display_name="Video Is Scored by Percent Viewed",
+        help="Select True if students receive a score for viewing the video.",
+        display_name="Video Is Scored When Viewed",
         scope=Scope.settings,
         default=False,
     )
