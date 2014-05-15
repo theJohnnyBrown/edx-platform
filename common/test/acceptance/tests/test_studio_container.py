@@ -46,6 +46,12 @@ class ContainerBase(UniqueCourseTest):
         self.group_b_item_1_handle = 5
         self.group_b_item_2_handle = 6
 
+        self.group_a_item_1_action_index = 0
+        self.group_a_item_2_action_index = 1
+
+        self.duplicate_label = "Duplicate of '{0}'"
+        self.discussion_label = "Discussion"
+
         self.setup_fixtures()
 
         self.auth_page.visit()
@@ -87,13 +93,6 @@ class ContainerBase(UniqueCourseTest):
         container = unit.components[0].go_to_container()
         return container
 
-
-class DragAndDropTest(ContainerBase):
-    """
-    Tests of reordering within the container page.
-    """
-    __test__ = True
-
     def verify_ordering(self, container, expected_orderings):
         xblocks = container.xblocks
         for expected_ordering in expected_orderings:
@@ -109,15 +108,28 @@ class DragAndDropTest(ContainerBase):
                         self.assertEqual(expected, children[idx].name)
                     break
 
-    def drag_and_verify(self, source, target, expected_ordering):
+    def do_action_and_verify(self, action, expected_ordering):
         container = self.go_to_container_page(make_draft=True)
-        container.drag(source, target)
+        action(container)
 
         self.verify_ordering(container, expected_ordering)
 
-        # Reload the page to see that the reordering was saved persisted.
+        # Reload the page to see that the change was persisted.
         container = self.go_to_container_page()
         self.verify_ordering(container, expected_ordering)
+
+
+class DragAndDropTest(ContainerBase):
+    """
+    Tests of reordering within the container page.
+    """
+    __test__ = True
+
+    def drag_and_verify(self, source, target, expected_ordering):
+        self.do_action_and_verify(
+            lambda (container): container.drag(source, target),
+            expected_ordering
+        )
 
     def test_reorder_in_group(self):
         """
@@ -159,13 +171,122 @@ class DragAndDropTest(ContainerBase):
                              {self.group_empty: []}]
         self.drag_and_verify(self.group_b_handle, self.group_a_item_1_handle, expected_ordering)
 
-    # Not able to drag into the empty group with automation (difficult even outside of automation).
-    # def test_drag_into_empty(self):
-    #     """
-    #     Drag Group B Item 1 to Group Empty.
-    #     """
-    #     expected_ordering = [{self.container_title: [self.group_a, self.group_empty, self.group_b]},
-    #                          {self.group_a: [self.group_a_item_1, self.group_a_item_2]},
-    #                          {self.group_b: [self.group_b_item_2]},
-    #                          {self.group_empty: [self.group_b_item_1]}]
-    #     self.drag_and_verify(6, 4, expected_ordering, False)
+    def test_drag_after_addition(self):
+        """
+        Add some components and then verify that drag and drop still works.
+        """
+        group_a_menu = 0
+
+        def add_new_components_and_rearrange(container):
+            # Add a video component to Group 1
+            container.add_discussion(group_a_menu)
+            # Duplicate the first item in Group A
+            container.duplicate(self.group_a_item_1_action_index)
+
+            first_handle = self.group_a_item_1_handle
+            # Drag newly added video component to top.
+            container.drag(first_handle + 3, first_handle)
+            # Drag duplicated component to top.
+            container.drag(first_handle + 2, first_handle)
+
+        duplicate_label = self.duplicate_label.format(self.group_a_item_1)
+
+        expected_ordering = [{self.container_title: [self.group_a, self.group_empty, self.group_b]},
+                             {self.group_a: [duplicate_label, self.discussion_label, self.group_a_item_1, self.group_a_item_2]},
+                             {self.group_b: [self.group_b_item_1, self.group_b_item_2]},
+                             {self.group_empty: []}]
+
+        self.do_action_and_verify(add_new_components_and_rearrange, expected_ordering)
+
+
+class AddComponentTest(ContainerBase):
+    """
+    Tests of adding a component to the container page.
+    """
+    __test__ = True
+
+    def add_and_verify(self, menu_index, expected_ordering):
+        self.do_action_and_verify(
+            lambda (container): container.add_discussion(menu_index),
+            expected_ordering
+        )
+
+    def test_add_component_in_group(self):
+        group_b_menu = 2
+
+        expected_ordering = [{self.group_b: [self.group_b_item_1, self.group_b_item_2, self.discussion_label]}]
+        self.add_and_verify(group_b_menu, expected_ordering)
+
+    def test_add_component_in_empty_group(self):
+        group_empty_menu = 1
+
+        expected_ordering = [{self.group_empty: [self.discussion_label]}]
+        self.add_and_verify(group_empty_menu, expected_ordering)
+
+    def test_add_component_in_container(self):
+        container_menu = 3
+
+        expected_ordering = [{self.container_title: [
+            self.group_a,
+            self.group_empty,
+            self.group_b,
+            self.discussion_label
+        ]}]
+        self.add_and_verify(container_menu, expected_ordering)
+
+
+class DuplicateComponentTest(ContainerBase):
+    """
+    Tests of duplicating a component on the container page.
+    """
+    __test__ = True
+
+    def duplicate_and_verify(self, source_index, expected_ordering):
+        self.do_action_and_verify(
+            lambda (container): container.duplicate(source_index),
+            expected_ordering
+        )
+
+    def test_duplicate_first_in_group(self):
+        duplicate_label = self.duplicate_label.format(self.group_a_item_1)
+        expected_ordering = [{self.group_a: [self.group_a_item_1, duplicate_label, self.group_a_item_2]}]
+        self.duplicate_and_verify(self.group_a_item_1_action_index, expected_ordering)
+
+    def test_duplicate_second_in_group(self):
+        duplicate_label = self.duplicate_label.format(self.group_a_item_2)
+        expected_ordering = [{self.group_a: [self.group_a_item_1, self.group_a_item_2, duplicate_label]}]
+        self.duplicate_and_verify(self.group_a_item_2_action_index, expected_ordering)
+
+    def test_duplicate_the_duplicate(self):
+        first_duplicate_label = self.duplicate_label.format(self.group_a_item_1)
+        second_duplicate_label = self.duplicate_label.format(first_duplicate_label)
+
+        expected_ordering = [{self.group_a: [
+            self.group_a_item_1,
+            first_duplicate_label,
+            second_duplicate_label,
+            self.group_a_item_2
+        ]}]
+
+        def duplicate_twice(container):
+            container.duplicate(self.group_a_item_1_action_index)
+            container.duplicate(self.group_a_item_1_action_index + 1)
+
+        self.do_action_and_verify(duplicate_twice, expected_ordering)
+
+
+class DeleteComponentTest(ContainerBase):
+    """
+    Tests of deleting a component from the container page.
+    """
+    __test__ = True
+
+    def delete_and_verify(self, source_index, expected_ordering):
+        self.do_action_and_verify(
+            lambda (container): container.delete(source_index),
+            expected_ordering
+        )
+
+    def test_delete_first_in_group(self):
+        expected_ordering = [{self.group_a: [self.group_a_item_2]}]
+        self.delete_and_verify(self.group_a_item_1_action_index, expected_ordering)
