@@ -64,16 +64,11 @@
                 });
             });
 
-            var assertEventBinding = function (selector, eventName) {
-                expect($(selector)).toHandle(eventName);
-            }
-
             it('bind the volume control', function () {
                 var button = $('.volume > a');
 
-                assertEventBinding(button, 'keydown');
-                assertEventBinding(button, 'mousedown');
-
+                expect(button).toHandle('keydown');
+                expect(button).toHandle('mousedown');
                 expect($('.volume')).not.toHaveClass('is-opened');
 
                 $('.volume').mouseenter();
