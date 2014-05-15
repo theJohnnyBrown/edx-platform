@@ -40,6 +40,9 @@ function(GraderCollection) {
 
             if (this.score && isFinite(this.score)) {
                 this.setScore(this.score);
+                this.updateStatusText(
+                    this.i18n['You\'ve received credit for viewing this video.']
+                );
             } else {
                 this.graders = this.getGraders(this.el, this.state);
                 $.when.apply(this, this.graders)
