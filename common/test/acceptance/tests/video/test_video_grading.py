@@ -13,18 +13,18 @@ class VideoGradedTest(VideoBaseTest):
         super(VideoGradedTest, self).setUp()
         self.progress_page = ProgressPage(self.browser, self.course_id)
 
-    def _assert_video_is_not_scored(self):
-        self.assertEquals(self.video.progress_message_text(), '(1.0 points possible)')
+    def _assert_video_is_not_scored(self, weight=1.0):
+        self.assertEquals(self.video.progress_message_text(), '({} points possible)'.format(weight))
         self.assertFalse(self.video.is_status_message_shown())
 
-    def _assert_video_is_scored_successfully(self):
-        self.assertEquals(self.video.progress_message_text(), '(1.0 / 1.0 points)')
+    def _assert_video_is_scored_successfully(self, weight=1.0):
+        self.assertEquals(self.video.progress_message_text(), '({} / {} points)'.format(weight, weight))
         self.assertEquals(self.video.status_message_text(), 'You\'ve received credit for viewing this video.')
 
-    def _assert_video_is_graded_successfully(self):
+    def _assert_video_is_graded_successfully(self, weight=1.0):
         self.tab_nav.go_to_tab('Progress')
         actual_scores = self.progress_page.scores('Test Chapter', 'Test Section')
-        self.assertEqual(actual_scores, [(1, 1)])
+        self.assertEqual(actual_scores, [(int(weight), int(weight))])
 
 
 class YouTubeVideoGradedTest(VideoGradedTest):
@@ -79,18 +79,17 @@ class Html5VideoGradedTest(VideoGradedTest):
         When I open progress page
         Then I see current scores are "1/1"
         """
-        data = {'has_score': True, 'scored_on_end': True}
+        data = {'has_score': True, 'scored_on_end': True, 'weight': 15.0}
         self.metadata = self.metadata_for_mode('html5', additional_data=data)
         self.navigate_to_video()
-        self._assert_video_is_not_scored()
+        self._assert_video_is_not_scored(weight=15.0)
         self.video.click_player_button('play')
 
         # Play the video until the end.
         self.video.wait_for_state('finished');
 
-        self._assert_video_is_scored_successfully()
-        self._assert_video_is_graded_successfully()
-
+        self._assert_video_is_scored_successfully(weight=15.0)
+        self._assert_video_is_graded_successfully(weight=15.0)
 
     def test_video_is_scored_when_all_graders_are_enabled(self):
         """
