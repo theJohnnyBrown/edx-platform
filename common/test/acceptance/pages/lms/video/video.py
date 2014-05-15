@@ -8,7 +8,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from bok_choy.page_object import PageObject
 from bok_choy.promise import EmptyPromise, Promise
 from bok_choy.javascript import wait_for_js, js_defined
-from video_grade_mixin import VideoGradeMixin
+from .video_grade_mixin import VideoGradeMixin
 
 
 VIDEO_BUTTONS = {
