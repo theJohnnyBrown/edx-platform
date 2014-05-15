@@ -1,4 +1,7 @@
-from paver.easy import *
+"""
+Javascript test tasks
+"""
+from paver.easy import task, cmdopts
 from pavelib import assets
 from .utils import test_utils
 from .utils.envs import Env
@@ -24,22 +27,23 @@ if not os.path.exists(JS_REPORT_DIR):
     os.makedirs(JS_REPORT_DIR)
 
 
-# Given an environment (a key in `JS_TEST_SUITES`)
-# return the path to the JavaScript test suite description
-# If `env` is nil, return a string containing
-# all available descriptions.
 def test_suite(suite):
-
+    """
+    Given an environment (a key in `JS_TEST_SUITES`),
+    return the path to the JavaScript test suite description
+    If `env` is nil, return a string containing all available descriptions.
+    """
     if not suite:
         return ' '.join(JS_TEST_SUITES.values())
     else:
         return JS_TEST_SUITES[suite]
 
 
-# Run the tests using js-test-tool
-# See js-test-tool docs for description of different
-# command line arguments
 def js_test_tool(suite, command, do_coverage):
+    """
+    Run the tests using js-test-tool
+    See js-test-tool docs for description of different command line arguments
+    """
     suite_yml = test_suite(suite)
     xunit_report = os.path.join(JS_REPORT_DIR, 'javascript_xunit.xml')
     cmd = "js-test-tool {command} {suite} --use-firefox --timeout-sec 600 --xunit-report {xunit_report}".format(
@@ -52,11 +56,12 @@ def js_test_tool(suite, command, do_coverage):
     test_utils.test_sh(cmd)
 
 
-# Print a list of js_test commands for
-# all available environments
 def print_js_test_cmds(mode):
-    for key, value in JS_TEST_SUITES.iteritems():
-        print("    paver test_js --mode={mode} --system={key}".format(mode=mode, key=key))
+    """
+    Print a list of js_test commands for all available environments
+    """
+    for system in JS_TEST_SUITES.keys():
+        print("    paver test_js --mode={mode} --system={system}".format(mode=mode, system=system))
 
 
 @task
@@ -114,7 +119,7 @@ def test_js_dev(options):
 
 
 @task
-def test_js_coverage(options):
+def test_js_coverage():
     """
     Run all JavaScript tests and collect coverage information
     """

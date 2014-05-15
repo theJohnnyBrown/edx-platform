@@ -1,7 +1,10 @@
-from paver.easy import *
+"""
+Helper functions for test tasks
+"""
+from paver.easy import sh, task
 import os
 import subprocess
-from process import kill_process
+from pavelib.utils.process import kill_process
 from .envs import Env
 
 __test__ = False  # do not collect
@@ -13,7 +16,7 @@ def test_sh(cmd):
     """
     kwargs = {'shell': True, 'cwd': None}
     process = None
-    
+
     try:
         print cmd
         process = subprocess.Popen(cmd, **kwargs)
@@ -36,13 +39,13 @@ def clean_test_files():
     sh("rm -rf test_root/log/auto_screenshots/*")
 
 
-def clean_dir(dir):
+def clean_dir(directory):
     """
     Clean coverage files, to ensure that we don't use stale data to generate reports.
     """
     # We delete the files but preserve the directory structure
     # so that coverage.py has a place to put the reports.
-    sh('find {dir} -type f -delete'.format(dir=dir))
+    sh('find {dir} -type f -delete'.format(dir=directory))
 
 
 @task
@@ -78,11 +81,11 @@ def check_for_required_dirs(lib):
     # no need to create test_ids file, since nose will do that
     test_ids = os.path.join(test_id_dir, 'noseids')
 
-    return report_dir, test_id_dir, test_ids 
+    return report_dir, test_ids
 
 
 # For colorizing stdout/stderr
-colors = {
+COLORS = {
     'PURPLE': '\033[95m',
     'BLUE': '\033[94m',
     'GREEN': '\033[92m',
@@ -91,7 +94,11 @@ colors = {
     'ENDC': '\033[0m',
 }
 
-def colorize(msg, color):
-    color = colors.get(color, 'ENDC')
-    return(color + msg + colors['ENDC'])
 
+def colorize(msg, color):
+    """
+    :returns: a string that when used as the msg arg to sys.stdout or sys.stderr will be
+    the specified color
+    """
+    color = COLORS.get(color, 'ENDC')
+    return(color + msg + COLORS['ENDC'])
