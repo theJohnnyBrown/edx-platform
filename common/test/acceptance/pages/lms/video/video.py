@@ -650,3 +650,83 @@ class VideoPage(PageObject, VideoGradeMixin):
         language_names = self.q(css=languages_selector).attrs('textContent')
 
         return dict(zip(language_codes, language_names))
+
+    def position(self, video_display_name=None):
+        """
+        Gets current video slider position.
+
+        Arguments:
+            video_display_name (str or None): Display name of a Video.
+
+        Returns:
+            str: current seek position in format min:sec.
+
+        """
+        selector = self.get_element_selector(video_display_name, CSS_CLASS_NAMES['video_time'])
+        current_seek_position = self.q(css=selector).text[0]
+        return current_seek_position.split('/')[0].strip()
+
+    def wait_for_position(self, position, video_display_name=None):
+        """
+        Wait until current equals `position`.
+
+        Arguments:
+            position (str): position we wait for.
+            video_display_name (str or None): Display name of a Video.
+
+        """
+        def _check_position():
+            """
+            Event occurred promise check.
+
+            Returns:
+                bool: is event occurred.
+
+            """
+            return self.position(video_display_name) == position
+
+        EmptyPromise(_check_position, 'Position is {event}'.format(event=position), timeout=200).fulfill()
+
+    def state(self, video_display_name=None):
+        """
+        Extract the current state(play, pause etc) of video.
+
+        Arguments:
+            video_display_name (str or None): Display name of a Video.
+
+        Returns:
+            str: current video state
+
+        """
+        state_selector = self.get_element_selector(video_display_name, CSS_CLASS_NAMES['video_container'])
+        current_state = self.q(css=state_selector).attrs('class')[0]
+
+        if 'is-playing' in current_state:
+            return 'playing'
+        elif 'is-paused' in current_state:
+            return 'pause'
+        elif 'is-buffered' in current_state:
+            return 'buffering'
+        elif 'is-ended' in current_state:
+            return 'finished'
+
+    def wait_for_state(self, state, video_display_name=None):
+        """
+        Wait until `state` occurs.
+
+        Arguments:
+            state (str): state we wait for.
+            video_display_name (str or None): Display name of a Video.
+
+        """
+        def _check_state():
+            """
+            Event occurred promise check.
+
+            Returns:
+                bool: is event occurred.
+
+            """
+            return self.state(video_display_name) == state
+
+        EmptyPromise(_check_state, 'State is {event}'.format(event=state), timeout=200).fulfill()
