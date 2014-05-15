@@ -232,7 +232,15 @@ def xblock_view_handler(request, package_id, view_name, tag=None, branch=None, v
                 'resources': [],
             })
         elif view_name in ('student_view', 'container_preview', 'container_child_preview'):
-            is_container_view = (view_name in ['container_preview', 'container_child_preview'])
+            is_container_view = (view_name in [
+                'container_preview', 'container_child_preview', 'unorderable_container_child_preview'
+            ])
+
+            # Determine the items to be shown as reorderable. Note that the 'container_child_preview'
+            # is only rendered for containers that support ordering.
+            reorderable_items = set()
+            if view_name == 'container_child_preview':
+                reorderable_items.add(xblock.location)
 
             # Only show the new style HTML for the container view, i.e. for non-verticals
             # Note: this special case logic can be removed once the unit page is replaced
@@ -242,6 +250,7 @@ def xblock_view_handler(request, package_id, view_name, tag=None, branch=None, v
                 'container_view': is_container_view,
                 'read_only': is_read_only,
                 'root_xblock': xblock if (view_name == 'container_preview') else None,
+                'reorderable_items': reorderable_items
             }
 
             fragment = get_preview_fragment(request, xblock, context)

@@ -44,15 +44,14 @@ define(["js/views/validation", "underscore", "jquery"], function(ValidatingView,
                 break;
             case 'course-grading-assignment-name':
                 // Keep the original name, until we save
-                this.oldName = _.isUndefined(this.oldName) ? this.model.get('type') : this.oldName;
+            this.oldName = this.oldName === undefined ? this.model.get('type') : this.oldName;
                 // If the name has changed, alert the user to change all subsection names.
-                if (this.setField(event) !== this.oldName && !_.isEmpty(this.oldName)) {
+            if (this.setField(event) != this.oldName && !_.isEmpty(this.oldName)) {
                     // overload the error display logic
                     this._cacheValidationErrors.push(event.currentTarget);
                     $(event.currentTarget).parent().append(
                         this.errorTemplate({message : 'For grading to work, you must change all "' + this.oldName +
-                            '" subsections to "' + this.model.get('type') + '".'})
-                    );
+                            '" subsections to "' + this.model.get('type') + '".'}));
                 }
                 break;
             default:

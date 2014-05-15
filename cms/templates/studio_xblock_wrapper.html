@@ -1,18 +1,17 @@
 <%! from django.utils.translation import ugettext as _ %>
-<%! from django.conf import settings %>
 
 % if not is_root:
-% if is_parent_reorderable:
-<li class="studio-xblock-wrapper is-draggable" data-locator="${locator}">
-% else:
-<div class="studio-xblock-wrapper" data-locator="${locator}">
-% endif
+    % if is_parent_reorderable:
+    <li class="studio-xblock-wrapper is-draggable" data-locator="${locator}">
+    % else:
+    <div class="studio-xblock-wrapper" data-locator="${locator}">
+    % endif
 
-<%
-section_class = "level-nesting" if xblock.has_children else "level-element"
-collapsible_class = "is-collapsible" if xblock.has_children else ""
-%>
-<section class="wrapper-xblock ${section_class} ${collapsible_class}">
+    <%
+    section_class = "level-nesting" if xblock.has_children else "level-element"
+    collapsible_class = "is-collapsible" if xblock.has_children else ""
+    %>
+    <section class="wrapper-xblock ${section_class} ${collapsible_class}">
 % endif
 
     <header class="xblock-header">
@@ -62,10 +61,10 @@ ${content}
     </article>
 
 % if not is_root:
-</section>
-% if is_parent_reorderable:
-</li>
-% else:
-</div>
-% endif
+    </section>
+    % if is_parent_reorderable:
+        </li>
+    % else:
+        </div>
+    % endif
 % endif

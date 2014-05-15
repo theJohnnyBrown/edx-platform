@@ -7,10 +7,6 @@ class StudioEditableModule(object):
     def render_reorderable_children(self, context, fragment):
         contents = []
 
-        context = {} if not context else context
-        if not 'reorderable_items' in context:
-            context['reorderable_items'] = set()
-
         for child in self.get_display_items():
             context['reorderable_items'].add(child.location)
             rendered_child = child.render('student_view', context)

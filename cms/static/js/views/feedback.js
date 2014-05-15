@@ -12,33 +12,33 @@ define(["jquery", "underscore", "underscore.string", "backbone", "js/utils/templ
                 minShown: 0,  // length of time after this view has been shown before it can be hidden (milliseconds)
                 maxShown: Infinity  // length of time after this view has been shown before it will be automatically hidden (milliseconds)
 
-                /* Could also have an "actions" hash: here is an example demonstrating
-                 the expected structure. For each action, by default the framework
-                 will call preventDefault on the click event before the function is
-                 run; to make it not do that, just pass `preventDefault: false` in
-                 the action object.
+            /* Could also have an "actions" hash: here is an example demonstrating
+               the expected structure. For each action, by default the framework
+               will call preventDefault on the click event before the function is
+               run; to make it not do that, just pass `preventDefault: false` in
+               the action object.
 
-                 actions: {
-                 primary: {
-                 "text": "Save",
-                 "class": "action-save",
-                 "click": function(view) {
-                 // do something when Save is clicked
-                 }
-                 },
-                 secondary: [
-                 {
-                 "text": "Cancel",
-                 "class": "action-cancel",
-                 "click": function(view) {}
-                 }, {
-                 "text": "Discard Changes",
-                 "class": "action-discard",
-                 "click": function(view) {}
-                 }
-                 ]
-                 }
-                 */
+            actions: {
+                primary: {
+                    "text": "Save",
+                    "class": "action-save",
+                    "click": function(view) {
+                        // do something when Save is clicked
+                    }
+                },
+                secondary: [
+                    {
+                        "text": "Cancel",
+                        "class": "action-cancel",
+                        "click": function(view) {}
+                    }, {
+                        "text": "Discard Changes",
+                        "class": "action-discard",
+                        "click": function(view) {}
+                    }
+                ]
+            }
+            */
             },
 
             initialize: function() {
