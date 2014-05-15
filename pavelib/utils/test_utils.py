@@ -76,7 +76,22 @@ def check_for_required_dirs(lib):
         os.makedirs(test_id_dir)
 
     # no need to create test_ids file, since nose will do that
-    test_ids = os.path.join(test_id_dir, '.noseids')
+    test_ids = os.path.join(test_id_dir, 'noseids')
 
     return report_dir, test_id_dir, test_ids 
+
+
+# For colorizing stdout/stderr
+colors = {
+    'PURPLE': '\033[95m',
+    'BLUE': '\033[94m',
+    'GREEN': '\033[92m',
+    'YELLOW': '\033[93m',
+    'RED': '\033[91m',
+    'ENDC': '\033[0m',
+}
+
+def colorize(msg, color):
+    color = colors.get(color, 'ENDC')
+    return(color + msg + colors['ENDC'])
 

@@ -12,7 +12,7 @@ dirs = os.listdir('{}/common/lib'.format(Env.REPO_ROOT))
 
 for dir in dirs:
     if os.path.isdir(os.path.join('{}/common/lib'.format(Env.REPO_ROOT), dir)):
-        TEST_TASK_DIRS.append(dir)
+        TEST_TASK_DIRS.append(os.path.join('common/lib', dir))
 
 
 def run_under_coverage(cmd, root):
@@ -106,9 +106,9 @@ def fasttest(options):
     failed_only = getattr(options, 'failed', False)
     fail_fast = getattr(options, "fail_fast", False)
 
-    msg = '\n{line} Running tests for {system} {line}\n'.format(system=system, line='-'*27)
-    sys.stderr.write(msg)
-    sys.stderr.flush()
+    msg = test_utils.colorize('\n{line}\n Running tests for {system} \n{line}\n'.format(system=system, line='='*40), 'GREEN')
+    sys.stdout.write(msg)
+    sys.stdout.flush()
 
     report_dir, test_id_dir, test_ids = test_utils.check_for_required_dirs(system)
 
@@ -138,16 +138,16 @@ def test_lib(options):
     fail_fast = getattr(options, "fail_fast", False)
 
     if not lib:
-        raise Exception('Missing required arg. Please specify --lib, -l')
+        raise Exception(test_utils.colorize('Missing required arg. Please specify --lib, -l', 'RED'))
 
     report_dir, test_id_dir, test_ids = test_utils.check_for_required_dirs(lib)
 
     if os.path.exists(os.path.join(report_dir, "nosetests.xml")):
         os.environ['NOSE_XUNIT_FILE'] = os.path.join(report_dir, "nosetests.xml")
 
-    msg = '\n{line} Running tests for {lib} {line}\n\n'.format(lib=lib, line='-'*27)
-    sys.stderr.write(msg)
-    sys.stderr.flush()
+    msg = test_utils.colorize('\n{line}\n Running tests for {lib} \n{line}\n\n'.format(lib=lib, line='='*40), 'GREEN')
+    sys.stdout.write(msg)
+    sys.stdout.flush()
 
     # Handle "--failed" as a special case: we want to re-run only
     # the tests that failed within our Django apps
@@ -170,7 +170,6 @@ def test_lib(options):
     finally:
         test_utils.clean_mongo()
 
-
 @task
 @cmdopts([
     ("lib=", "l", "lib to test"),
@@ -188,8 +187,12 @@ def test_python(options):
     """
     Run all python tests
     """
-    test_system({'system': 'lms'})
-    test_system({'system': 'cms'})
+
+    setattr(options, 'system', 'cms')
+    test_system(options)
+
+    setattr(options, 'system', 'lms' )
+    test_system(options)
 
     for dir in TEST_TASK_DIRS:
         setattr(options, 'lib', dir)
@@ -201,9 +204,9 @@ def test(options):
     """
     Run all tests
     """
-    # test_python(options)
+    test_python(options)
     js_test.test_js_coverage(options)
-    call_task('paver.docs.build_docs')
+    call_task('pavelib.docs.build_docs')
 
 
 @task
