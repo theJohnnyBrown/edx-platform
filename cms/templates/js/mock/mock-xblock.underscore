@@ -5,7 +5,9 @@
         </div>
         <div class="header-actions">
             <ul class="actions-list">
-                <li class="sr action-item">No Actions</li>
+                <li class="action-item action-drag">
+                    <span data-tooltip="Drag to reorder" class="drag-handle action"></span>
+                </li>
             </ul>
         </div>
     </header>

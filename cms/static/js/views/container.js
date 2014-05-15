@@ -1,6 +1,7 @@
 define(["jquery", "underscore", "js/views/xblock", "js/utils/module", "gettext", "js/views/feedback_notification"],
     function ($, _, XBlockView, ModuleUtils, gettext, NotificationView) {
-        var reorderableClass = '.reorderable-container';
+        var reorderableClass = '.reorderable-container',
+            studioXBlockWrapperClass = '.studio-xblock-wrapper';
 
         var ContainerView = XBlockView.extend({
 
@@ -57,7 +58,7 @@ define(["jquery", "underscore", "js/views/xblock", "js/utils/module", "gettext",
                         // be null if the change is related to the list the element
                         // was originally in (the case of a move within the same container
                         // or the deletion from a container when moving to a new container).
-                        var parent = $(event.target).closest('.studio-xblock-wrapper');
+                        var parent = $(event.target).closest(studioXBlockWrapperClass);
                         if (ui.sender) {
                             // Move to a new container (the addition part).
                             newParent = parent;
@@ -81,10 +82,10 @@ define(["jquery", "underscore", "js/views/xblock", "js/utils/module", "gettext",
             reorder: function (targetParent, successCallback) {
                 var children, childLocators;
 
-                // Find descendants with class "studio-xblock-wrapper" whose parent == targetParent.
+                // Find descendants with class "studio-xblock-wrapper" whose parent === targetParent.
                 // This is necessary to filter our grandchildren, great-grandchildren, etc.
-                children = targetParent.find('.studio-xblock-wrapper').filter(function () {
-                    var parent = $(this).parent().closest('.studio-xblock-wrapper');
+                children = targetParent.find(studioXBlockWrapperClass).filter(function () {
+                    var parent = $(this).parent().closest(studioXBlockWrapperClass);
                     return parent.data('locator') === targetParent.data('locator');
                 });
 

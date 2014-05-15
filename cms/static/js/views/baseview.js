@@ -89,6 +89,8 @@ define(["jquery", "underscore", "backbone", "gettext", "js/utils/handle_iframe_b
 
             /**
              * Shows a progress message for the duration of an asynchronous operation.
+             * Note: this does not remove the notification upon failure because an error
+             * will be shown that shouldn't be removed.
              * @param message The message to show.
              * @param operation A function that returns a promise representing the operation.
              */
@@ -98,7 +100,7 @@ define(["jquery", "underscore", "backbone", "gettext", "js/utils/handle_iframe_b
                     title: gettext(message)
                 });
                 notificationView.show();
-                return operation().always(function() {
+                return operation().done(function() {
                     notificationView.hide();
                 });
             },

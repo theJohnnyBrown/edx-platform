@@ -1,5 +1,6 @@
-define(["jquery", "underscore", "js/views/baseview", "js/utils/handle_iframe_binding", "sinon"],
-    function ($, _, BaseView, IframeBinding, sinon) {
+define(["jquery", "underscore", "js/views/baseview", "js/utils/handle_iframe_binding", "sinon",
+    "js/spec_helpers/edit_helpers"],
+    function ($, _, BaseView, IframeBinding, sinon, view_helpers) {
 
         describe("BaseView", function() {
             var baseViewPrototype;
@@ -100,18 +101,24 @@ define(["jquery", "underscore", "js/views/baseview", "js/utils/handle_iframe_bin
                     var testMessage = "Testing...",
                         deferred = new $.Deferred(),
                         promise = deferred.promise(),
-                        view = new BaseView();
+                        view = new BaseView(),
+                        notificationSpy = view_helpers.createNotificationSpy();
                     view.runOperationShowingMessage(testMessage, function() { return promise; });
+                    view_helpers.verifyNotificationShowing(notificationSpy, /Testing/);
                     deferred.resolve();
+                    view_helpers.verifyNotificationHidden(notificationSpy);
                 });
 
-                it("shows progress notification and removes it upon failure", function() {
+                it("shows progress notification and leaves it showing upon failure", function() {
                     var testMessage = "Testing...",
                         deferred = new $.Deferred(),
                         promise = deferred.promise(),
-                        view = new BaseView();
+                        view = new BaseView(),
+                        notificationSpy = view_helpers.createNotificationSpy();
                     view.runOperationShowingMessage(testMessage, function() { return promise; });
-                    deferred.resolve();
+                    view_helpers.verifyNotificationShowing(notificationSpy, /Testing/);
+                    deferred.fail();
+                    view_helpers.verifyNotificationShowing(notificationSpy, /Testing/);
                 });
             });
         });

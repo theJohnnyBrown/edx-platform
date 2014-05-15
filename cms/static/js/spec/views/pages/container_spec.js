@@ -191,7 +191,7 @@ define(["jquery", "underscore", "js/spec_helpers/create_sinon", "js/spec_helpers
                         promptSpies.show.andReturn(this.promptSpies);
                     });
 
-                    clickDelete = function(componentIndex) {
+                    clickDelete = function(componentIndex, clickNo) {
 
                         // find all delete buttons for the given group
                         var deleteButtons = getGroupElement().find(".delete-button");
@@ -205,18 +205,18 @@ define(["jquery", "underscore", "js/spec_helpers/create_sinon", "js/spec_helpers
 
                         // no components should be deleted yet
                         expectNumComponents(NUM_COMPONENTS_PER_GROUP);
+
+                        // click 'Yes' or 'No' on delete confirmation
+                        if (clickNo) {
+                            promptSpies.constructor.mostRecentCall.args[0].actions.secondary.click(promptSpies);
+                        } else {
+                            promptSpies.constructor.mostRecentCall.args[0].actions.primary.click(promptSpies);
+                        }
                     };
 
-                    deleteComponent = function(componentIndex, responseCode) {
-
-                        // click delete button for given component
+                    deleteComponent = function(componentIndex) {
                         clickDelete(componentIndex);
-
-                        // click 'Yes' on delete confirmation
-                        promptSpies.constructor.mostRecentCall.args[0].actions.primary.click(promptSpies);
-
-                        // respond to request with given response code
-                        lastRequest().respond(responseCode, {}, "");
+                        create_sinon.respondWithJson(requests, {});
 
                         // expect request URL to contain given component's id
                         expect(lastRequest().url).toMatch(
@@ -225,9 +225,7 @@ define(["jquery", "underscore", "js/spec_helpers/create_sinon", "js/spec_helpers
                     };
 
                     deleteComponentWithSuccess = function(componentIndex) {
-
-                        // delete component with an 'OK' response code
-                        deleteComponent(componentIndex, 200);
+                        deleteComponent(componentIndex);
 
                         // verify the new list of components within the group
                         expectComponents(
@@ -257,11 +255,8 @@ define(["jquery", "underscore", "js/spec_helpers/create_sinon", "js/spec_helpers
                         renderContainerPage(mockContainerXBlockHtml, this);
                         numRequests = requests.length;
 
-                        // click delete on the first component
-                        clickDelete(0);
-
-                        // click 'No' on delete confirmation
-                        promptSpies.constructor.mostRecentCall.args[0].actions.secondary.click(promptSpies);
+                        // click delete on the first component but press no
+                        clickDelete(0, true);
 
                         // all components should still exist
                         expectComponents(getGroupElement(), allComponentsInGroup);
@@ -270,10 +265,22 @@ define(["jquery", "underscore", "js/spec_helpers/create_sinon", "js/spec_helpers
                         expect(requests.length).toBe(numRequests);
                     });
 
-                    it('does not delete an xblock upon failure', function () {
+                    it('shows a notification during the delete operation', function() {
+                        var notificationSpy = edit_helpers.createNotificationSpy();
                         renderContainerPage(mockContainerXBlockHtml, this);
-                        deleteComponent(0, 500);
-                        expectComponents(getGroupElement(), allComponentsInGroup);
+                        clickDelete(0);
+                        edit_helpers.verifyNotificationShowing(notificationSpy, /Deleting/);
+                        create_sinon.respondWithJson(requests, {});
+                        edit_helpers.verifyNotificationHidden(notificationSpy);
+                    });
+
+                    it('does not delete an xblock upon failure', function () {
+                        var notificationSpy = edit_helpers.createNotificationSpy();
+                        renderContainerPage(mockContainerXBlockHtml, this);
+                        clickDelete(0);
+                        edit_helpers.verifyNotificationShowing(notificationSpy, /Deleting/);
+                        create_sinon.respondWithError(requests);
+                        edit_helpers.verifyNotificationShowing(notificationSpy, /Deleting/);
                     });
                 });
 
@@ -303,11 +310,6 @@ define(["jquery", "underscore", "js/spec_helpers/create_sinon", "js/spec_helpers
 
                         // verify content of request
                         request = lastRequest();
-                        request.respond(
-                            responseCode,
-                            { "Content-Type": "application/json" },
-                            JSON.stringify({'locator': 'locator-duplicated-component'})
-                        );
                         expect(request.url).toEqual("/xblock");
                         expect(request.method).toEqual("POST");
                         expect(JSON.parse(request.requestBody)).toEqual(
@@ -317,6 +319,13 @@ define(["jquery", "underscore", "js/spec_helpers/create_sinon", "js/spec_helpers
                                     '"parent_locator": "locator-group-' + GROUP_TO_TEST +
                                     '"}'
                             )
+                        );
+
+                        // send the response
+                        request.respond(
+                            responseCode,
+                            { "Content-Type": "application/json" },
+                            JSON.stringify({'locator': 'locator-duplicated-component'})
                         );
                     };
 
@@ -384,7 +393,7 @@ define(["jquery", "underscore", "js/spec_helpers/create_sinon", "js/spec_helpers
                         edit_helpers.verifyNotificationHidden(notificationSpy);
                     });
 
-                    it('does not insert duplicated component upon failure', function () {
+                    it('does not insert component upon failure', function () {
                         var requestCount;
                         renderContainerPage(mockContainerXBlockHtml, this);
                         clickNewComponent(0);

@@ -104,33 +104,39 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification",
             },
 
             createComponent: function(template, target) {
+                // A placeholder element is created in the correct location for the new xblock
+                // and then onNewXBlock will replace it with a rendering of the xblock. Note that
+                // for xblocks that can't be replaced inline, the entire parent will be refreshed.
                 var parentElement = this.findXBlockElement(target),
                     parentLocator = parentElement.data('locator'),
                     buttonPanel = target.closest('.add-xblock-component'),
                     listPanel = buttonPanel.prev(),
                     scrollOffset = this.getScrollOffset(buttonPanel),
-                    newElement = $('<li></li>').appendTo(listPanel),
+                    placeholderElement = $('<div></div>').appendTo(listPanel),
                     requestData = _.extend(template, {
                         parent_locator: parentLocator
                     });
                 return $.postJSON(this.getURLRoot(), requestData,
-                    _.bind(this.onNewXBlock, this, newElement, scrollOffset));
+                    _.bind(this.onNewXBlock, this, placeholderElement, scrollOffset));
             },
 
             duplicateComponent: function(xblockElement) {
+                // A placeholder element is created in the correct location for the duplicate xblock
+                // and then onNewXBlock will replace it with a rendering of the xblock. Note that
+                // for xblocks that can't be replaced inline, the entire parent will be refreshed.
                 var self = this,
                     parent = xblockElement.parent();
                 this.runOperationShowingMessage(gettext('Duplicating&hellip;'),
                     function() {
                         var scrollOffset = self.getScrollOffset(xblockElement),
-                            newElement = $('<li></li>').insertAfter(xblockElement),
+                            placeholderElement = $('<div></div>').insertAfter(xblockElement),
                             parentElement = self.findXBlockElement(parent),
                             requestData = {
                                 duplicate_source_locator: xblockElement.data('locator'),
                                 parent_locator: parentElement.data('locator')
                             };
                         return $.postJSON(self.getURLRoot(), requestData,
-                            _.bind(self.onNewXBlock, self, newElement, scrollOffset));
+                            _.bind(self.onNewXBlock, self, placeholderElement, scrollOffset));
                     });
             },
 
