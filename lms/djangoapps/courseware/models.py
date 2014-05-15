@@ -90,10 +90,10 @@ class StudentModule(models.Model):
         return unicode(repr(self))
 
 
-def module_modified_times(user, ids):
+def course_modified_times(user, ids):
     ''' Returns the times when a given studentmodule was last modified. 
     '''
-    results = StudentModule.objects.filter(student = user, module_state_key__in = map(unicode,ids))
+    results=StudentModule.objects.filter(student = user, module_state_key__in = map(unicode,ids))
     return dict([(r.module_state_key, r.modified) for r in results])
 
 
