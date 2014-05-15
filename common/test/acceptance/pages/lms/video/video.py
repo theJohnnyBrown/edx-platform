@@ -85,6 +85,18 @@ class VideoPage(PageObject, VideoGradeMixin):
 
         EmptyPromise(_is_element_present, promise_desc, timeout=200).fulfill()
 
+    def _wait_for(self, check_func, desc, timeout=200):
+        """
+        Calls the method providedas an argument until the return value is not False.
+
+        Arguments:
+            check_func (callable): Function that accepts no arguments and returns a boolean indicating whether the promise is fulfilled.
+            desc (str): Description of the Promise, used in log messages.
+            timeout (float): Maximum number of seconds to wait for the Promise to be satisfied before timing out.
+
+        """
+        EmptyPromise(check_func, desc, timeout=timeout).fulfill()
+
     @wait_for_js
     def wait_for_video_class(self):
         """
@@ -668,24 +680,17 @@ class VideoPage(PageObject, VideoGradeMixin):
 
     def wait_for_position(self, position, video_display_name=None):
         """
-        Wait until current equals `position`.
+        Wait until current will be equal `position`.
 
         Arguments:
             position (str): position we wait for.
             video_display_name (str or None): Display name of a Video.
 
         """
-        def _check_position():
-            """
-            Event occurred promise check.
-
-            Returns:
-                bool: is event occurred.
-
-            """
-            return self.position(video_display_name) == position
-
-        EmptyPromise(_check_position, 'Position is {event}'.format(event=position), timeout=200).fulfill()
+        self._wait_for(
+            lambda: self.position(video_display_name) == position,
+            'Position is {position}'.format(position=position)
+        )
 
     def state(self, video_display_name=None):
         """
@@ -719,14 +724,7 @@ class VideoPage(PageObject, VideoGradeMixin):
             video_display_name (str or None): Display name of a Video.
 
         """
-        def _check_state():
-            """
-            Event occurred promise check.
-
-            Returns:
-                bool: is event occurred.
-
-            """
-            return self.state(video_display_name) == state
-
-        EmptyPromise(_check_state, 'State is {event}'.format(event=state), timeout=200).fulfill()
+        self._wait_for(
+            lambda: self.state(video_display_name) == state,
+            'State is {state}'.format(state=state)
+        )
