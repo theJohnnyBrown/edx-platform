@@ -170,8 +170,7 @@ def _is_xblock_reorderable(xblock, context):
     """
     Returns true if the specified xblock is in the set of reorderable xblocks.
     """
-    reorderable_items = context['reorderable_items']
-    return (xblock.location in reorderable_items) if reorderable_items else False
+    return xblock.location in context['reorderable_items']
 
 
 # pylint: disable=unused-argument

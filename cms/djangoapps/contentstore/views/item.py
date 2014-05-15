@@ -232,9 +232,7 @@ def xblock_view_handler(request, package_id, view_name, tag=None, branch=None, v
                 'resources': [],
             })
         elif view_name in ('student_view', 'container_preview', 'container_child_preview'):
-            is_container_view = (view_name in [
-                'container_preview', 'container_child_preview', 'unorderable_container_child_preview'
-            ])
+            is_container_view = (view_name in ['container_preview', 'container_child_preview'])
 
             # Determine the items to be shown as reorderable. Note that the 'container_child_preview'
             # is only rendered for containers that support ordering.

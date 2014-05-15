@@ -103,8 +103,8 @@
                                                     <article class="xblock-render"></article>
                                                 </section>
                                             </li>
-                                            <li class="add-xblock-component new-component-item adding"></li>
                                         </ol>
+                                        <div class="add-xblock-component new-component-item adding"></div>
                                     </div>
                                 </article>
                             </section>
@@ -208,8 +208,8 @@
                                                     <article class="xblock-render"></article>
                                                 </section>
                                             </li>
-                                            <li class="add-xblock-component new-component-item adding"></li>
                                         </ol>
+                                        <div class="add-xblock-component new-component-item adding"></div>
                                     </div>
                                 </article>
                             </section>
