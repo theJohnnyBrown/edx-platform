@@ -28,7 +28,7 @@ from util.sandboxing import can_execute_unsafe_code
 
 import static_replace
 from .session_kv_store import SessionKeyValueStore
-from .helpers import render_from_lms, get_parent_xblock
+from .helpers import render_from_lms
 from ..utils import get_course_for_item
 
 from contentstore.views.access import get_user_role

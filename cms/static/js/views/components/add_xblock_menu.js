@@ -12,7 +12,7 @@ define(["jquery", "js/views/baseview"],
                 this.template = this.loadTemplate(template_name);
                 this.$el.html(this.template({type: this.model.type, templates: this.model.templates}));
                 // Make the tabs on problems into "real tabs"
-                $('.tab-group').tabs();
+                this.$('.tab-group').tabs();
             }
         });
 

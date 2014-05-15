@@ -1,7 +1,7 @@
+/**
+ * Simple model for adding a component of a given type (for example, "video" or "html").
+ */
 define(["backbone"], function (Backbone) {
-    /**
-     * Simple model for adding a component of a given type (for example, "video" or "html").
-     */
     return Backbone.Model.extend({
         defaults: {
             type: "",

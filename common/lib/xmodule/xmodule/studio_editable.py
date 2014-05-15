@@ -2,9 +2,16 @@
 Mixin to support editing in Studio.
 """
 
+
 class StudioEditableModule(object):
+    """
+    Helper methods for supporting Studio editing of xblocks.
+    """
 
     def render_reorderable_children(self, context, fragment):
+        """
+        Renders children with the appropriate HTML structure for drag and drop.
+        """
         contents = []
 
         for child in self.get_display_items():
